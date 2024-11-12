@@ -15,11 +15,20 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="..\lib\shader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\glad.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\data_structure\graph.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\shader.h">
       <Filter>头文件</Filter>
     </ClInclude>
