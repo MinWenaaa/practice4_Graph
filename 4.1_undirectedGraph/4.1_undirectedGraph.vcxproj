@@ -138,12 +138,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\lib\glad.c" />
+    <ClCompile Include="..\mylib\game_object.cpp" />
+    <ClCompile Include="..\mylib\shader.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\data_structure\graph.hpp" />
+    <ClInclude Include="..\mylib\game_object.h" />
+    <ClInclude Include="..\mylib\graph.hpp" />
+    <ClInclude Include="..\mylib\shader.h" />
     <ClInclude Include="game.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\mylib\node.fs" />
+    <None Include="..\mylib\node.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

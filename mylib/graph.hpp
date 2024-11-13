@@ -71,15 +71,15 @@ Minw::undirectedGraph<T, E>::undirectedGraph(int sz) {
 //------------------------------------------------------------------------
 template<class T, class E> 
 Minw::undirectedGraph<T, E>::~undirectedGraph() {
-	for (int i = 0; i < numVertices; i++) {
-		Edge<T, E>* p = nodeTable[i].adj;
-		while (p) {
-			this->nodeTable[i].adj = p->link;
-			delete p;
-			p = this->nodeTable[i].adj;
-		}
-	}
-	delete[]nodeTable;
+	//for (int i = 0; i < numVertices; i++) {
+	//	Edge<T, E>* p = nodeTable[i].adj;
+	//	while (p != nullptr) {
+	//		this->nodeTable[i].adj = p->link;
+	//		delete p;
+	//		p = this->nodeTable[i].adj;
+	//	}
+	//}
+	//delete[]nodeTable;
 }
 //------------------------------------------------------------------------
 template<class T, class E>

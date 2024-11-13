@@ -24,13 +24,33 @@
     <ClCompile Include="game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\mylib\shader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mylib\game_object.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\data_structure\graph.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="game.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\mylib\graph.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mylib\shader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mylib\game_object.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\mylib\node.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="..\mylib\node.fs">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

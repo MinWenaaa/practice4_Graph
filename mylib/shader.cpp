@@ -50,6 +50,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 	checkCompileErrors(ID, "program");
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
+	//std::cout << glGetError() << std::endl;
 }
 // ------------------------------------------------------------------------
 void Shader::checkCompileErrors(unsigned int shader, std::string type) {
@@ -71,7 +72,9 @@ void Shader::checkCompileErrors(unsigned int shader, std::string type) {
 }
 // ------------------------------------------------------------------------
 void Shader::use() {
+	//std::cout << glGetError() << std::endl;
 	glUseProgram(ID);
+	//std::cout << glGetError() << std::endl;
 }
 // ------------------------------------------------------------------------
 void Shader::setBool(const std::string& name, bool value) const {
@@ -115,6 +118,8 @@ WindowParas::WindowParas() {
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Wrong!" << std::endl;
 	}
+	defaultAlpha = SCREEN_WIDTH / SCREEN_HEIGHT;
+	//std::cout << glGetError() << std::endl;
 }
 // ------------------------------------------------------------------------
 GLfloat WindowParas::screen2normalX(GLdouble screenX) const {
