@@ -1,5 +1,4 @@
 #include"shader.h"
-#include<glad/glad.h>
 #include<GLFW/glfw3.h>
 #include<fstream>
 #include<sstream>
@@ -94,4 +93,23 @@ void Shader::setVec3(const std::string& name, float f1, float f2, float f3) cons
 // ------------------------------------------------------------------------
 void Shader::setVec4(const std::string& name, float f1, float f2, float f3, float f4) const {
 	glUniform4f(glGetUniformLocation(ID, name.c_str()), f1, f2, f3, f4);
+}
+
+WindowParas::WindowParas() {
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	this->window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL_Learning", NULL, NULL);
+
+	if (window == NULL) {
+		std::cout << "Wrong!" << std::endl;
+		glfwTerminate();
+	}
+	glfwMakeContextCurrent(window);
+
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+		std::cout << "Wrong!" << std::endl;
+	}
 }

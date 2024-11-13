@@ -1,9 +1,10 @@
-#include<shader.h>
-#include<glad/glad.h>
+#include"shader.h"
+#include"game.h"
 #include<GLFW/glfw3.h>
 
 #include<data_structure/graph.hpp>
 #include<iostream>
+
 
 #define SCR_WIDTH 1600
 #define SCR_HEIGHT 1200
@@ -13,27 +14,11 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void upload_ourColor(Shader shaderProgram);
 
+
+
 int main() {
-	Minw::undirectedGraph<int, int> graph = Minw::undirectedGraph<int, int>(10);
 
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "OpenGL_Learning", NULL, NULL);
-	if (window == NULL) {
-		std::cout << "Wrong!" << std::endl;
-		glfwTerminate();
-		return -1;
-	}
-	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		std::cout << "Wrong!" << std::endl;
-		return -1;
-	}
+	GLFWwindow* window = WindowParas::getInstance().window;
 
 	Shader ourShader("shader.vs", "shader.fs");
 

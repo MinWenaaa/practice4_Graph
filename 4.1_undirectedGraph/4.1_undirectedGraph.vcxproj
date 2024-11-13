@@ -137,13 +137,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\lib\game_object.cpp" />
     <ClCompile Include="..\lib\glad.c" />
     <ClCompile Include="..\lib\shader.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\data_structure\graph.hpp" />
-    <ClInclude Include="..\include\shader.h" />
+    <ClInclude Include="..\include\game_object.h" />
+    <ClInclude Include="game.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

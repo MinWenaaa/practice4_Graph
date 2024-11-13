@@ -24,12 +24,21 @@
     <ClCompile Include="..\lib\glad.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\lib\game_object.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\data_structure\graph.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\shader.h">
+    <ClInclude Include="game.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\game_object.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

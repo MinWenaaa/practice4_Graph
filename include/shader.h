@@ -2,6 +2,9 @@
 #define SHADER_H
 
 #include<glad/glad.h>
+#include<GLFW/glfw3.h>
+#include<glm/glm.hpp>
+#include<vector>
 #include<string>
 
 class Shader {
@@ -19,6 +22,27 @@ public:
 	void setVec4(const std::string& name, float f1, float f2, float f3, float f4) const;
 private:
 	void checkCompileErrors(unsigned int shader, std::string type);
+};
+
+class WindowParas {
+public:
+	static WindowParas& getInstance() {
+		static WindowParas instance;
+		return instance;
+	}
+	WindowParas(const WindowParas&) = delete;
+	void operator=(const WindowParas&) = delete;
+
+	GLFWwindow* window;
+	const GLint WINDOW_WIDTH = 960;
+	const GLint WINDOW_HEIGHT = 720;
+	const GLint SIDEBAR_WIDTH = 300;
+	GLint SCREEN_WIDTH = 1600, SCREEN_HEIGHT = 1200;
+	GLfloat xScale, yScale;
+	GLfloat defaultAlpha;
+	
+private:
+	WindowParas();
 };
 
 #endif
