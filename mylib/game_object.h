@@ -1,3 +1,6 @@
+//
+//-------------------- for the practice4_Graph ----------------------
+//
 #pragma once
 
 #include<shader.h>
@@ -36,7 +39,8 @@ namespace painter {
 
 	class Edge : public gameObject {
 	public:
-		Edge(const std::vector<glm::vec2> positions = std::vector<glm::vec2>(0), GLenum shp = GL_LINE, Shader* shader = nullptr) :gameObject(positions, shp, shader) {}
+		Edge(const glm::vec2 positions = glm::vec2(0.0f, 0.0f), GLenum shp = GL_LINE, Shader* shader = nullptr) :gameObject(positions, shp, shader) {}
 		void draw() const override {}
 	};
+
 }

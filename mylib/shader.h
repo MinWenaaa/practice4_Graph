@@ -1,3 +1,7 @@
+//
+//-------------------- for the practice4_Graph ----------------------
+//
+
 #ifndef SHADER_H
 #define SHADER_H
 
@@ -38,8 +42,13 @@ public:
 	const GLint WINDOW_HEIGHT = 720;
 	const GLint SIDEBAR_WIDTH = 300;
 	GLint SCREEN_WIDTH = 1600, SCREEN_HEIGHT = 1200;
-	GLfloat xScale, yScale;
+	GLfloat xScale = 1, yScale = 1;
 	GLfloat defaultAlpha;
+
+	GLfloat screen2normalX(GLdouble screenX) const;
+	GLfloat screen2normalY(GLdouble screenY) const;
+	GLfloat normal2orthoX(GLfloat normalX) const;
+	GLfloat normal2orthoY(GLfloat normalY) const;
 	
 private:
 	WindowParas();

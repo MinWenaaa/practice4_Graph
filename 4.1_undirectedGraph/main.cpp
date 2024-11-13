@@ -1,3 +1,7 @@
+//
+//-------------------- for the 4.1_undirectedGraph ----------------------
+//
+
 #include"shader.h"
 #include"game.h"
 #include<GLFW/glfw3.h>
@@ -13,18 +17,18 @@ void vertex_buffer_object(unsigned int& VBO, unsigned int& VAO);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void upload_ourColor(Shader shaderProgram);
-
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
 
 int main() {
 
 	GLFWwindow* window = WindowParas::getInstance().window;
+	Game::getInstance().Init(window);
 
 	Shader ourShader("shader.vs", "shader.fs");
 
 	unsigned int VBO, VAO;
 	vertex_buffer_object(VBO, VAO);
-
 
 	while (!glfwWindowShouldClose(window)) {
 
@@ -107,4 +111,9 @@ void upload_ourColor(Shader shader) {
 	float timeValue = glfwGetTime();
 	float yValue = sin(timeValue * 2);
 	shader.setVec3("transform", 0.0f, yValue, 0.0f);
+}
+
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+	if (!(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)) return;
+
 }

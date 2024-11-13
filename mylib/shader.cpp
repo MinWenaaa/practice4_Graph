@@ -1,5 +1,8 @@
+//
+//-------------------- for the practice4_Graph ----------------------
+//
+
 #include"shader.h"
-#include<GLFW/glfw3.h>
 #include<fstream>
 #include<sstream>
 #include<iostream>
@@ -113,3 +116,21 @@ WindowParas::WindowParas() {
 		std::cout << "Wrong!" << std::endl;
 	}
 }
+// ------------------------------------------------------------------------
+GLfloat WindowParas::screen2normalX(GLdouble screenX) const {
+	return  (2.0f * static_cast<GLfloat>(screenX / SCREEN_WIDTH * xScale)) - 1.0f;
+}
+GLfloat WindowParas::screen2normalY(GLdouble screenY) const {
+	return 1.0f - (2.0f * static_cast<GLfloat>(screenY / SCREEN_HEIGHT * yScale));
+}
+GLfloat WindowParas::normal2orthoX(GLfloat normalX) const {
+	GLfloat left = -SCREEN_WIDTH / xScale / 2.0f;
+	GLfloat right = SCREEN_WIDTH / xScale / 2.0f;
+	return  left + (right - left) * (normalX + 1) / 2;
+}
+GLfloat WindowParas::normal2orthoY(GLfloat normalY) const {
+	GLfloat button = -SCREEN_HEIGHT / yScale / 2.0f;
+	GLfloat top = SCREEN_HEIGHT / yScale / 2.0f;
+	return  button + (top - button) * (normalY + 1) / 2;
+}
+// ------------------------------------------------------------------------
