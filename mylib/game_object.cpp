@@ -56,3 +56,33 @@ void painter::Node::draw() const {
     glBindVertexArray(0);
     //std::cout << glGetError() << std::endl;
 }
+
+painter::Edge::Edge(GLfloat* positions, Shader* shader, int stride) 
+    : stride(stride), shader(shader) {
+    vertices = new GLfloat[stride * 2];
+    for (int i = 0; i < stride - 1; i++) {
+        vertices[i * 2] = positions[0];
+        vertices[i * 2 + 1] = positions[1];
+    }
+    vertices[stride * 2 - 2] = positions[2];
+    vertices[stride * 2 - 1] = positions[3];
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * stride * 2, vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+void painter::Edge::draw() const {
+    shader->use();
+    glBindVertexArray(VAO);
+    //std::cout << glGetError() << std::endl;
+    glDrawArrays(GL_LINE, 0, stride);
+    //std::cout << glGetError() << std::endl;
+    glBindVertexArray(0);
+}

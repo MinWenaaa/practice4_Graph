@@ -14,7 +14,7 @@ namespace painter {
 	class Node {
 	public:
 		Node(){}
-		Node(GLfloat x, GLfloat y, Shader* shader, GLenum shp = GL_TRIANGLE_FAN, GLfloat radius = 0.2);
+		Node(GLfloat x, GLfloat y, Shader* shader, GLenum shp = GL_TRIANGLE_FAN, GLfloat radius = 0.1);
 		//Node(const Node& other) : gameObject(other.vertices, other.shape, other.shader), radius(other.radius) {}
 		void draw() const;
 
@@ -27,7 +27,7 @@ namespace painter {
 
 		GLfloat* getArc(GLfloat x, GLfloat y, GLfloat radius);
 
-		GLfloat radius = 0.2;
+		GLfloat radius;
 		GLuint VAO, VBO;
 		Shader* shader;
 		GLsizei stride;
@@ -36,11 +36,16 @@ namespace painter {
 
 	class Edge {
 	public:
-		Edge(GLfloat* positions = nullptr, GLenum shp = GL_LINE, Shader* shader = nullptr) {}
-		Edge(const Edge& other) {}
+		Edge(){}
+		Edge(GLfloat* positions, Shader* shader = nullptr, int stride = 4);
 
 		~Edge() {}
-		void draw() const {}
+		void draw() const;
+
+		GLfloat* vertices;
+		Shader* shader;
+		GLuint VAO, VBO;
+		int stride;
 	};
 
 }

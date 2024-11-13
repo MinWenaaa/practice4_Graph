@@ -27,23 +27,25 @@ public:
 		numVertex = (numVertex + 1) % 4;
 	}
 
-	Shader NodeShader;
-
-	Game(): 
-		graphData(20), gameVertex(0), gameEdge(0),
-		isRendering(false), interactive(true), NodeShader(Shader("../mylib/node.vs", "../mylib/node.fs")) {
-		numVertex = 0;
-	}
+private:
+	Game(): graphData(20), gameVertex(0), gameEdge(0), numVertex(0), numEdge(0),
+		isRendering(false), interactive(true), 
+		NodeShader(Shader("../mylib/node.vs", "../mylib/node.fs")), EdgeShader(Shader("../mylib/node.vs", "../mylib/node.fs")){}
 
 	void addVertex(GLfloat x, GLfloat y);
+	void addEdge(int v1, int v2);
+	int targetPoint(GLfloat x, GLfloat y);
 
 	Minw::undirectedGraph<int, int> graphData;
 	std::vector<painter::Node> gameVertex;
 	std::vector<painter::Edge> gameEdge;
+	Shader NodeShader;
+	Shader EdgeShader;
 	bool isRendering;
 	bool interactive;
 	int lastPoint = -1;
 	int numVertex;
+	int numEdge;
 };
 
 void mouseCallback(GLFWwindow* window, int button, int action, int mods);

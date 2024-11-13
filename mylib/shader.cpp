@@ -118,7 +118,7 @@ WindowParas::WindowParas() {
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Wrong!" << std::endl;
 	}
-	defaultAlpha = SCREEN_WIDTH / SCREEN_HEIGHT;
+	defaultAlpha = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 	//std::cout << glGetError() << std::endl;
 }
 // ------------------------------------------------------------------------
