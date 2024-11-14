@@ -46,10 +46,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\mylib\node.vs">
+    <None Include="..\mylib\node_static.vs">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="..\mylib\node.fs">
+    <None Include="..\mylib\node_static.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="..\mylib\edge_basic.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="..\mylib\edge_basic.vs">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

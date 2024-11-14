@@ -150,8 +150,10 @@
     <ClInclude Include="game.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\mylib\node.fs" />
-    <None Include="..\mylib\node.vs" />
+    <None Include="..\mylib\edge_basic.fs" />
+    <None Include="..\mylib\edge_basic.vs" />
+    <None Include="..\mylib\node_static.fs" />
+    <None Include="..\mylib\node_static.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

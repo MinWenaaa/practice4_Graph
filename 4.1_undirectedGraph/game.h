@@ -30,7 +30,7 @@ public:
 private:
 	Game(): graphData(20), gameVertex(0), gameEdge(0), numVertex(0), numEdge(0),
 		isRendering(false), interactive(true), 
-		NodeShader(Shader("../mylib/node.vs", "../mylib/node.fs")), EdgeShader(Shader("../mylib/node.vs", "../mylib/node.fs")){}
+		NodeShader(Shader("../mylib/node_static.vs", "../mylib/node_static.fs")), EdgeShader(Shader("../mylib/edge_basic.vs", "../mylib/edge_basic.fs")){}
 
 	void addVertex(GLfloat x, GLfloat y);
 	void addEdge(int v1, int v2);

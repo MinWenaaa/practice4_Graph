@@ -33,12 +33,13 @@ void Game::ProcessInput(GLfloat x, GLfloat y) {
 
 	} else {						// ≤Â»Î±ﬂ
 		addEdge(lastPoint, target);
+		lastPoint = -1;
 	}
 }
 int Game::targetPoint(GLfloat x, GLfloat y) {
 	bool flag = false;
 	for (int i = 0; i < numVertex; i++) {
-		if (abs(x - gameVertex[i].vertices[0]) < gameVertex[i].radius && abs(y - gameVertex[i].vertices[1]) < gameVertex[i].radius)
+		if (abs(x - gameVertex[i].x) < gameVertex[i].radius && abs(y - gameVertex[i].y) < gameVertex[i].radius)
 			return i;
 	}
 	return -1;
@@ -55,12 +56,14 @@ void Game::addVertex(GLfloat x, GLfloat y) {
 void Game::addEdge(int v1, int v2) {
 	this->graphData.insertEdge(v1, v2, 0);
 	this->numEdge++;
-	GLfloat* points = new GLfloat[4];
-	points[0] = gameVertex[v1].vertices[0];
-	points[1] = gameVertex[v1].vertices[1];
-	points[2] = gameVertex[v2].vertices[0];
-	points[3] = gameVertex[v2].vertices[1];
-	painter::Edge edge(points, &EdgeShader);
+	GLfloat* points = new GLfloat[6];
+	points[0] = v1;
+	points[1] = gameVertex[v1].x;
+	points[2] = gameVertex[v1].y;
+	points[3] = v2;
+	points[4] = gameVertex[v2].x;
+	points[5] = gameVertex[v2].y;
+	painter::Edge edge(points, v1, v2, &EdgeShader);
 	this->gameEdge.push_back(std::move(edge));
 	delete[] points;
 	std::cout << numEdge << std::endl;
