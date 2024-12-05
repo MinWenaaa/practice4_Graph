@@ -9,9 +9,6 @@
 void Game::Init(GLFWwindow* window) {
 	glfwMakeContextCurrent(window);
 	glfwSetMouseButtonCallback(window, mouseCallback);
-	addVertex(0.1f, 0.1f);
-	addVertex(0.3f, 0.3f);
-	addVertex(0.5f, 0.5f);
 }
 //---------------------------------------------------------------------------------
 void Game::update(float dt) {
@@ -19,11 +16,12 @@ void Game::update(float dt) {
 }
 //---------------------------------------------------------------------------------
 void Game::ProcessInput(GLfloat x, GLfloat y) {
-	std::cout << "click x: " << x << "; click y: " << y << std::endl;
+	std::cout << "click x: " << x << ", y : " << y << "; glGetError():" << glGetError() << std::endl;
 	int target = targetPoint(x, y);
 
 	if (target == -1) {				// 插入节点
 		addVertex(x, y);
+		lastPoint = -1;
 
 	} else if (lastPoint == -1) {	// 选择节点
 		lastPoint = target;
@@ -39,7 +37,7 @@ void Game::ProcessInput(GLfloat x, GLfloat y) {
 int Game::targetPoint(GLfloat x, GLfloat y) {
 	bool flag = false;
 	for (int i = 0; i < numVertex; i++) {
-		if (abs(x - gameVertex[i].x) < gameVertex[i].radius && abs(y - gameVertex[i].y) < gameVertex[i].radius)
+		if (abs(x - gameVertex[i].x) < gameVertex[i].pocess && abs(y - gameVertex[i].y) < gameVertex[i].pocess)
 			return i;
 	}
 	return -1;
@@ -48,28 +46,23 @@ int Game::targetPoint(GLfloat x, GLfloat y) {
 void Game::addVertex(GLfloat x, GLfloat y) {
 	this->graphData.insertVertex(numVertex);
 	this->numVertex++;
-	painter::Node node(x, y, &NodeShader);
+	std::cout << glGetError() << std::endl;
+	painter::Node node(x, y, 1, &NodeShader);
 	this->gameVertex.push_back(std::move(node));
-	std::cout << numVertex << std::endl;
+	std::cout << "Point: " << numVertex << std::endl;
 }
 
 void Game::addEdge(int v1, int v2) {
 	this->graphData.insertEdge(v1, v2, 0);
 	this->numEdge++;
-	GLfloat* points = new GLfloat[6];
-	points[0] = v1;
-	points[1] = gameVertex[v1].x;
-	points[2] = gameVertex[v1].y;
-	points[3] = v2;
-	points[4] = gameVertex[v2].x;
-	points[5] = gameVertex[v2].y;
-	painter::Edge edge(points, v1, v2, &EdgeShader);
+	GLfloat points[] = { gameVertex[v1].x, gameVertex[v1].y, gameVertex[v2].x, gameVertex[v2].y };
+	painter::Edge edge(points, 2, v1, v2, v1, &EdgeShader);
 	this->gameEdge.push_back(std::move(edge));
-	delete[] points;
 	std::cout << numEdge << std::endl;
 }
 //---------------------------------------------------------------------------------
 void Game::Render() {
+	//std::cout << "Game Render Begin: " << glGetError() << std::endl;
 	for (int i = 0; i < numVertex; i++) {
 		this->gameVertex[i].draw();
 		//std::cout << glGetError() << std::endl;
@@ -80,7 +73,7 @@ void Game::Render() {
 }
 
 void mouseCallback(GLFWwindow* window, int button, int action, int mods) {
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)	{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)	{		//单击事件处理
 		WindowParas& windowPara = WindowParas::getInstance();
 		GLdouble xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);

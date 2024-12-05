@@ -50,7 +50,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 	checkCompileErrors(ID, "program");
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
-	//std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
 }
 // ------------------------------------------------------------------------
 void Shader::checkCompileErrors(unsigned int shader, std::string type) {
@@ -106,6 +106,8 @@ WindowParas::WindowParas() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	//glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
 	this->window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL_Learning", NULL, NULL);
 
@@ -119,7 +121,7 @@ WindowParas::WindowParas() {
 		std::cout << "Wrong!" << std::endl;
 	}
 	defaultAlpha = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
-	//std::cout << glGetError() << std::endl;
+	std::cout << glGetError() << std::endl;
 }
 // ------------------------------------------------------------------------
 GLfloat WindowParas::screen2normalX(GLdouble screenX) const {

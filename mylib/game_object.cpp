@@ -3,133 +3,147 @@
 //
 
 #include<game_object.h>
+#include<algorithm>
+#include<cmath>
 #include"../4.1_undirectedGraph/game.h"
 #include<iostream>
 
-#define PI 3.14159265358979323846
+painter::Node::Node(GLfloat x, GLfloat y, GLint color, Shader* shader, GLenum shp, GLfloat pocess)
+    : pocess(pocess), shader(shader), isDrawing(true), x(x), y(y) {
 
-const int pointNum = 30;
+    const int stride = circle_pointNum + 2;
+    float positions[stride*2];
+    getArc(positions);
+    int colors[stride]{ color };
 
-painter::Node::Node(GLfloat x, GLfloat y, Shader* shader, GLenum shp, GLfloat radius)
-    : radius(radius), shader(shader), moving(true), x(x), y(y) {
-
-    stride = pointNum + 2;
-    data  = new GLfloat[stride*2];
-    getArc(x, y, radius, data);
-
+    std::cout << "Node Init:" << glGetError() << std::endl;
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &VBO_position);
+    glGenBuffers(1, &VBO_color);
     glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*stride*2, data, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_position);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*stride*2, positions, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_color);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * stride * 2, colors, GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 1, GL_INT, GL_FALSE, 1 * sizeof(int), (void*)0);
+    glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-    //std::cout << glGetError() << std::endl;
+    std::cout << "Node Init End: " << glGetError() << std::endl;
 }
 
 void painter::Node::draw() {
-    if (moving) {
-        radius += 0.0005;
-        getArc(x, y, radius, data);
+    //std::cout << "Node Draw Begin: " << glGetError() << std::endl;
+    if (isDrawing) {
+        pocess += 0.0002;
+        const int stride = circle_pointNum + 2;
+        float positions[stride * 2];
+        getArc(positions);
         glBindVertexArray(VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * stride * 2, data, GL_DYNAMIC_DRAW);
+        //std::cout << glGetError() << std::endl;
+        glBindBuffer(GL_ARRAY_BUFFER, VBO_position);
+        //std::cout << glGetError() << std::endl;
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * stride * 2, positions, GL_DYNAMIC_DRAW);
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+        //std::cout << glGetError() << std::endl;
     }
     shader->use();
     //std::cout << glGetError() << std::endl;
     glBindVertexArray(VAO);
     //std::cout << glGetError() << std::endl;
-    glDrawArrays(GL_TRIANGLE_FAN, 0, stride);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, circle_pointNum+2);
     //std::cout << glGetError() << std::endl;
     glBindVertexArray(0);
     //std::cout << glGetError() << std::endl;
-    if (radius > 0.03) moving = false;
+    if (pocess > 0.03) isDrawing = false;
 }
 
-GLfloat* painter::Node::getArc(GLfloat x, GLfloat y, GLfloat radius, GLfloat*& data) {
+void painter::Node::getArc(GLfloat* data) {
     data[0] = x;
     data[1] = y;
+    //data[31] = x;
+    //data[32] = y;
 
+    const int stride = circle_pointNum + 2;
     float scale = WindowParas::getInstance().defaultAlpha;
-    for (int i = 0; i <= pointNum; i++) {
-        float angle = 2.0f * PI * i / pointNum;
-        data[i * 2 + 2] = x + radius * cos(angle) / scale;
-        data[i * 2 + 3] = y + radius * sin(angle);
+    float angle = 0;
+    for (int i = 0; i <= circle_pointNum; i++) {
+        angle = 2.0f * PI * i / circle_pointNum;
+        data[i * 2 + 2 ] = x + pocess * cos(angle) / scale;
+        data[i * 2 + 3] = y + pocess * sin(angle);
+        //std::cout << data[i * 2] << ", " << data[i * 2 + 1] << std::endl;
     }
 
-    //std::cout << sizeof(vertices) << std::endl;
-    return data;
+    //std::cout << std::endl;
 }
 
-painter::Edge::Edge(GLfloat* positions, int v1, int v2, Shader* shader, int stride) 
-    : stride(stride), shader(shader), start(v1), moving(true), poccess(0) {
-    vertices = new GLfloat[stride * 2];
+painter::Edge::Edge(GLfloat* positions, GLint color, int v1, int v2, int satrt, Shader* shader)
+    : shader(shader), start(start), isDrawing(true), poccess(0) {
+    std::copy(positions, positions + 4, node);
 
-    for (int i = 0; i < stride - 1; i++) {
-        vertices[i * 2] = positions[1];
-        vertices[i * 2 + 1] = positions[2];
-    }
-    vertices[stride * 2 - 2] = positions[4];
-    vertices[stride * 2 - 1] = positions[5];
-    
-    bool walked[] = { true, true, false, false };
-    node = new float[6];
-    for (int i = 0; i < 6; i++) {
-        node[i] = positions[i];
-    }
-
+    delta = 0.0002 / sqrt(pow(node[0] - node[2], 2) + pow(node[1] - node[3], 2));
+    GLfloat position[8];
+    transform(position);
+    int colors[4] = { color };
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO1);
-    glGenBuffers(1, &VBO2);
+    glGenBuffers(1, &VBO_position);
+    glGenBuffers(1, &VBO_color);
     glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO1);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * stride * 2, vertices, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_position);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8, position, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO2);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(bool) * stride, walked, GL_STATIC_DRAW);
-    glVertexAttribPointer(1, 1, GL_BOOL, GL_FALSE, sizeof(bool), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_color);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4, colors, GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 1, GL_INT, GL_FALSE, 1 * sizeof(int), (void*)0);
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
 
 void painter::Edge::draw() {
-    if (moving) {
-        transform();
+    GLfloat position[8];
+    if (isDrawing) {        
+        transform(position);
     }
     shader->use();
     glBindVertexArray(VAO);
     //std::cout << glGetError() << std::endl;
-    glDrawArrays(GL_LINES, 0, stride);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     //std::cout << glGetError() << std::endl;
     glBindVertexArray(0);
 }
 
-void painter::Edge::transform() {
-    poccess += 0.005;
+void painter::Edge::transform(GLfloat* position) {
+    poccess += delta;
     
     GLfloat sX, sY, eX, eY;
-    if (start == node[0]) {
-        sX = node[1]; sY = node[2]; eX = node[4]; eY= node[5];
+    if (start == v1) {
+        sX = node[0]; sY = node[1]; eX = sX + poccess * (node[2] - sX); eY = sY + poccess * (node[3] - sY);
     } else {
-        sX = node[4]; sY = node[5]; eX = node[1]; eY = node[2];
+        sX = node[2]; sY = node[3]; eX = sX + poccess * (node[0] - sX); eY = sY + poccess * (node[1] - sY);
     }
+    
+    float deltaX = eX - sX;
+    float deltaY = eY - sY;
+    float L = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
+    position[0] = sX + deltaY / L * 0.005;
+    position[1] = sY - deltaX / L * 0.005;
+    position[2] = sX - deltaY / L * 0.005;
+    position[3] = sY + deltaX / L * 0.005;
+    position[4] = eX + deltaY / L * 0.005;
+    position[5] = eY - deltaX / L * 0.005;
+    position[6] = eX - deltaY / L * 0.005;
+    position[7] = eY + deltaX / L * 0.005;
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_position);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8, position, GL_DYNAMIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
-    vertices[0] = sX;
-    vertices[1] = sY;
-    vertices[stride * 2 - 2] = eX;
-    vertices[stride * 2 - 1] = eY;
-
-    for (int i = 1; i < stride - 1; i++) {
-        vertices[i * 2] = sX + poccess * (eX - sX);
-        vertices[i * 2 + 1] = sY + poccess * (eY - sY);
-    }
-
-    if (poccess > 1) moving = false;
+    if (poccess > 1) isDrawing = false;
 }
