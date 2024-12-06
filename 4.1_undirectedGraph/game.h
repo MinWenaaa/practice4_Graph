@@ -26,7 +26,7 @@ public:
 
 private:
 	Game(): graphData(20), gameVertex(0), gameEdge(0), numVertex(0), numEdge(0),
-		isRendering(false),
+		isRendering(false), color(0), nextColor(1),
 		NodeShader(Shader("../mylib/node_static.vs", "../mylib/node_static.fs")), EdgeShader(Shader("../mylib/edge_basic.vs", "../mylib/edge_basic.fs")){
 		std::cout << glGetError() << std::endl;
 	}
@@ -47,6 +47,7 @@ private:
 	int numEdge;									//边数量
 	int current_depth = -1;							//当前绘制深度
 	float pocess = 0;
+	GLuint color, nextColor;
 };
 
 void mouseCallback(GLFWwindow* window, int button, int action, int mods);

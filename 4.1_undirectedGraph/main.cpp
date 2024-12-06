@@ -28,7 +28,7 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
 
-		glClearColor(0.2f, 0.4f, 0.3f, 1.0f);
+		glClearColor(0.f, 0.f, 0.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		//glLineWidth(1.0f);
 		//std::cout << glGetError() << std::endl;

@@ -13,6 +13,15 @@ void main() {
 	case 2:
 		FragColor = vec4(0.6, 0.6, 0.8, 1);
 		break;
+	case 3:
+		FragColor = vec4(0.6, 0.8, 0.8, 1);
+		break;
+	case 4:
+		FragColor = vec4(0.8, 0.6, 0.8, 1);
+		break;
+	case 5:
+		FragColor = vec4(0.8, 0.8, 0.6, 1);
+		break;
 	default:
 		FragColor = vec4(0.6, 0.6, 0.6, 1);
 		break;

@@ -92,12 +92,12 @@ E Minw::undirectedGraph<T, E>::getWeight(int v1, int v2) {
 	if (v1 < 0 || v1 >= numVertices || v2 < 0 || v2 >= numVertices) return -2;
 
 	Edge<T, E>* p = this->nodeTable[v1].adj;
-	while (p->dest != v2) {
+	while (p) {
+		if (p->dest == v2) return p->cost;
 		p = p->link;
-		if (!p) return -1;
 	}
-	return p->cost;
 
+	if (!p) return -1;
 }
 //------------------------------------------------------------------------
 template<class T, class E>
@@ -146,13 +146,23 @@ bool Minw::undirectedGraph<T, E>::DFS(int v) {
 
 	// 开始搜索
 	int last_pn = v, pn = v, current_depth = 0;
-	Edge<T,E>* pe = nodeTable[pn].adj;
+	Edge<T, E>* pe = nodeTable[pn].adj;
+	Edge<T, E>* pt = nullptr;
 	nodeTable[pn].depth = current_depth++;
 	while (pe) {
 		// 标记当前节点、边和对应边
-		pe->depth = current_depth++;
+		pe->depth = current_depth;
+		pt = nodeTable[pe->dest].adj;
+		while (pt) {
+			if (pt->dest == pn) {
+				pt->depth = current_depth++;
+				break;
+			}
+			pt = pt->link;
+		}
 		pn = pe->dest;
 		if (nodeTable[pn].depth == -1) nodeTable[pn].depth = current_depth++;
+
 
 		// 寻找下一条边
 		pe = nodeTable[pn].adj;
@@ -196,9 +206,10 @@ int Minw::undirectedGraph<T, E>::getDepthE(int v1, int v2) {
 	if (v1 < 0 || v1 >= numVertices || v2 < 0 || v2 >= numVertices) return -2;
 
 	Edge<T, E>* p = this->nodeTable[v1].adj;
-	while (p->dest != v2) {
+	while (p) {
+		if (p->dest == v2) return p->depth;
 		p = p->link;
-		if (!p) return -1;
 	}
-	return p->cost;
+
+	if (!p) return -1;
 }

@@ -37,7 +37,7 @@ void painter::Node::setCoverColor(GLuint c) {
     for (int i = 0; i < stride_node; i++) {
         colors[i] = c;
     }
-    glBindVertexArray(VAO);
+    glBindVertexArray(VAO_cover);
     glBindBuffer(GL_ARRAY_BUFFER, coverVBO_c);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * stride_node, colors, GL_STATIC_DRAW);
     glVertexAttribIPointer(1, 1, GL_INT, sizeof(GLuint), (void*)0);
@@ -84,7 +84,7 @@ void painter::Node::draw_coverLayer(float &p) {
     glDrawArrays(GL_TRIANGLE_FAN, 0, circle_pointNum + 2);
     glBindVertexArray(0);
 
-    if (p > 1) color = newColor;
+    if (p > 1) setColor();
 }
 
 void painter::Node::getArc(GLfloat* data, float p) {
@@ -117,8 +117,8 @@ void painter::Node::setColor() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-painter::Edge::Edge(GLfloat* positions, GLint color, int v1, int v2, int satrt, Shader* shader)
-    : shader(shader), start(start), isInited(false), color(color), poccess(0) {
+painter::Edge::Edge(GLfloat* positions, GLint color, int v1, int v2, int start, Shader* shader)
+    : shader(shader), start(start), isInited(false), color(color), v1(v1), v2(v2), poccess(0) {
 
     std::copy(positions, positions + 4, node);
     delta = 0.0002 / sqrt(pow(node[0] - node[2], 2) + pow(node[1] - node[3], 2));
@@ -148,7 +148,7 @@ void painter::Edge::setCoverColor(GLuint c) {
     for (int i = 0; i < stride_line; i++) {
         colors[i] = c;
     }
-    glBindVertexArray(VAO);
+    glBindVertexArray(VAO_cover);
     glBindBuffer(GL_ARRAY_BUFFER, coverVBO_c);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * stride_line, colors, GL_STATIC_DRAW);
     glVertexAttribIPointer(1, 1, GL_INT, sizeof(GLuint), (void*)0);
@@ -183,7 +183,7 @@ void painter::Edge::draw_coverLayer(float &p) {
     p += delta;
     transform(position, p);
     glBindVertexArray(VAO_cover);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_position);
+    glBindBuffer(GL_ARRAY_BUFFER, coverVBO_p);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8, position, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -192,7 +192,7 @@ void painter::Edge::draw_coverLayer(float &p) {
     if (p > 1) setColor();
 
     shader->use();
-    glBindVertexArray(VAO);
+    glBindVertexArray(VAO_cover);
     //std::cout << glGetError() << std::endl;
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     //std::cout << glGetError() << std::endl;

@@ -25,7 +25,7 @@ namespace painter {
 		void draw_coverLayer(float &p);
 		void setCoverColor(GLuint color);
 
-		~Node() {	// Attention: 析构函数调用时机未知，导致VAO失效
+		~Node() {	// Attention: 析构函数调用导致VAO失效
 			// glDeleteVertexArrays(1, &VAO);
 			// glDeleteBuffers(1, &VBO_position);
 			// glDeleteBuffers(1, &VBO_color);
@@ -46,7 +46,7 @@ namespace painter {
 	class Edge {
 	public:
 		Edge(){}
-		Edge(GLfloat* positions, GLint color, int v1, int v2, int satrt, Shader* shader = nullptr);
+		Edge(GLfloat* positions, GLint color, int v1, int v2, int start, Shader* shader = nullptr);
 
 		~Edge() {
 			//glDeleteVertexArrays(1, &VAO);
