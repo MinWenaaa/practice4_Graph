@@ -11,10 +11,11 @@ namespace Minw {
 	struct Edge {
 		int dest;
 		E cost;
+		int depth;
 		Edge<T, E>* link;
 
-		Edge():dest(0), cost(0), link(nullptr) {};
-		Edge(int num, E weight): dest(num), cost(weight), link(nullptr) {}
+		Edge():dest(0), cost(0), link(nullptr), depth(-1){};
+		Edge(int num, E weight): dest(num), cost(weight), link(nullptr), depth(-1) {}
 		bool operator != (Edge<T, E> R) const {
 			return (dest != R.dest) ? true : false;
 		}
@@ -23,8 +24,9 @@ namespace Minw {
 	template <class T, class E>
 	struct Node {
 		T data;
+		int depth;
 		Edge<T, E>* adj;
-		Node() :data(0), adj(nullptr) {};
+		Node() :data(0), adj(nullptr), depth(-1) {};
 	};
 
 	template <class T, class E>
@@ -40,8 +42,8 @@ namespace Minw {
 		E getWeight(int v1, int v2);
 		//T getVertex(int v);
 
-		bool DFS();
-		bool DBS();
+		bool DFS(int v);
+		bool BFS(int v);
 
 		int getDepthN(int v);
 		int getDepthE(int v1, int v2);
@@ -130,21 +132,73 @@ bool Minw::undirectedGraph<T, E>::insertEdge(int v1, int v2, E weight) {
 }
 //------------------------------------------------------------------------
 template<class T, class E>
-bool Minw::undirectedGraph<T, E>::DFS() {
+bool Minw::undirectedGraph<T, E>::DFS(int v) {
+	//	将所有节点与边置为未访问状态
+	bool* visited_node = new bool[numVertices]();
+	for (int i = 0; i < numVertices; i++) {
+		nodeTable[i].depth = -1;
+		Edge<T,E>* p = nodeTable[i].adj;
+		while (p) {
+			p->depth = -1;
+			p = p->link;
+		}
+	}
 
+	// 开始搜索
+	int last_pn = v, pn = v, current_depth = 0;
+	Edge<T,E>* pe = nodeTable[pn].adj;
+	nodeTable[pn].depth = current_depth++;
+	while (pe) {
+		// 标记当前节点、边和对应边
+		pe->depth = current_depth++;
+		pn = pe->dest;
+		if (nodeTable[pn].depth == -1) nodeTable[pn].depth = current_depth++;
+
+		// 寻找下一条边
+		pe = nodeTable[pn].adj;
+		while (pe) {
+			if (pe->depth == -1) break;
+			pe = pe->link;
+		}
+		if (!pe) {	// 当前节点访问完毕，标记并寻找其他节点
+			visited_node[pn] = true;
+			bool flag = false;
+			for (int i = 0; i < numVertices; i++) {
+				if (visited_node[i] || nodeTable[i].depth == -1) continue;
+				pn = i;
+				flag = true;
+			}
+			if (!flag) return true;	// 所有节点访问完成，结束循环
+			pe = nodeTable[pn].adj;
+			while (pe) {
+				if (pe->depth == -1) break;
+				pe = pe->link;
+			}
+		}
+
+	}
+	return false;
 }
 //------------------------------------------------------------------------
 template<class T, class E>
-bool Minw::undirectedGraph<T, E>::DBS() {
+bool Minw::undirectedGraph<T, E>::BFS(int v) {
 
 }
 //------------------------------------------------------------------------
 template<class T, class E>
 int Minw::undirectedGraph<T, E>::getDepthN(int v) {
-
+	if (v<0 || v> numVertices) return -1;
+	return nodeTable[v].depth;
 }
 //------------------------------------------------------------------------
 template<class T, class E>
 int Minw::undirectedGraph<T, E>::getDepthE(int v1, int v2) {
+	if (v1 < 0 || v1 >= numVertices || v2 < 0 || v2 >= numVertices) return -2;
 
+	Edge<T, E>* p = this->nodeTable[v1].adj;
+	while (p->dest != v2) {
+		p = p->link;
+		if (!p) return -1;
+	}
+	return p->cost;
 }

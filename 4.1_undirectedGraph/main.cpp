@@ -20,7 +20,6 @@ void processInput(GLFWwindow* window);
 
 int main() {
 
-
 	GLFWwindow* window = WindowParas::getInstance().window;
 	Game::getInstance().Init(window);
 	GLfloat lineWidthRange[2];

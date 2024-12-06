@@ -36,8 +36,8 @@ private:
 	int targetPoint(GLfloat x, GLfloat y);
 
 	Minw::undirectedGraph<int, int> graphData;		//存储图的节点与链接信息
-	std::vector<painter::Node> gameVertex;			//节点图元列表
-	std::vector<painter::Edge> gameEdge;			//边图元列表
+	std::vector<painter::Node> gameVertex;				//节点图元列表
+	std::vector<painter::Edge> gameEdge;					//边图元列表
 	Shader NodeShader;								//普通的节点渲染程序对象
 	Shader EdgeShader;								//普通的边渲染程序对象
 	bool isRendering;								//是否正在播放动画（生成或遍历），是则禁止交互
@@ -45,6 +45,8 @@ private:
 	int lastPoint = -1;								//记录上次选中节点的坐标
 	int numVertex;									//节点数量
 	int numEdge;									//边数量
+	int current_depth = -1;							//当前绘制深度
+	float pocess = 0;
 };
 
 void mouseCallback(GLFWwindow* window, int button, int action, int mods);
