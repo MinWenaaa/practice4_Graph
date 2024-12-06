@@ -178,7 +178,10 @@ bool Minw::undirectedGraph<T, E>::DFS(int v) {
 				pn = i;
 				flag = true;
 			}
-			if (!flag) return true;	// 所有节点访问完成，结束循环
+			if (!flag) {
+				delete[] visited_node;
+				return true;	// 所有节点访问完成，结束循环
+			}
 			pe = nodeTable[pn].adj;
 			while (pe) {
 				if (pe->depth == -1) break;
@@ -187,12 +190,52 @@ bool Minw::undirectedGraph<T, E>::DFS(int v) {
 		}
 
 	}
+	delete[] visited_node;
 	return false;
 }
 //------------------------------------------------------------------------
 template<class T, class E>
 bool Minw::undirectedGraph<T, E>::BFS(int v) {
+	//	将所有节点与边置为未访问状态
+	bool* visited_node = new bool[numVertices]();
+	for (int i = 0; i < numVertices; i++) {
+		nodeTable[i].depth = -1;
+		Edge<T, E>* p = nodeTable[i].adj;
+		while (p) {
+			p->depth = -1;
+			p = p->link;
+		}
+	}
 
+	int* record = new int[numVertices]();
+	int head = 0, tail = 1, curhead = 0, curtail = 0, current = 0, current_depth = 0;
+	record[0] = v;
+	Edge<T, E> *p, *pt;
+	while (head<numVertices-1) {	// 每次循环是一层
+		curhead = head; curtail = tail; head = tail;
+		for (int i = curhead; i < curtail; i++) {		// 搜索每一个节点
+			p = nodeTable[i].adj;
+			nodeTable[i].depth = current_depth;
+			current = 0;	// 当前节点下子节点数量
+			while (p) {
+				if (p->depth != -1) { p = p->link; continue; }	// 已经遍历，跳过
+				record[head + current++] = p->dest;
+				p->depth = current_depth + 1;
+				pt = nodeTable[p->dest].adj;		// 标记对应边
+				while (pt) {
+					if (pt->dest == i) {
+						pt->depth = current_depth + 1;
+						break;
+					}
+					pt = pt->link;
+				}
+			}
+			tail += current;
+		}
+		current_depth++;
+	}
+	delete[] record;
+	return true;
 }
 //------------------------------------------------------------------------
 template<class T, class E>

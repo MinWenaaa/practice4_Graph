@@ -28,7 +28,7 @@ void Game::ProcessInput(GLfloat x, GLfloat y) {
 		lastPoint = target;
 
 	} else if (lastPoint == target) {// 随机深度/广度优先
-		graphData.DFS(target);
+		graphData.BFS(target);
 		isRendering = true;
 		for (int i = 0; i < numVertex; i++) 
 		{
@@ -87,6 +87,8 @@ void Game::Render() {
 		//std::cout << glGetError() << std::endl;
 
 	if (isRendering) {
+		bool flag = false;
+		pocess += 0.0005;
 		if (pocess > 1) {
 			pocess = 0;
 			current_depth += 1;
@@ -95,16 +97,18 @@ void Game::Render() {
 		{
 			if (this->gameEdge[i].depth != current_depth) continue;
 			this->gameEdge[i].draw_coverLayer(pocess);
-			return;
+			flag = true;
 		}
 		for (int i = 0; i < numVertex; i++) {
 			if (this->gameVertex[i].depth != current_depth) continue;
 			this->gameVertex[i].draw_coverLayer(pocess);
-			return;
+			flag = true;
 		}
-		color = nextColor;
-		nextColor = (nextColor + 1) % 6;
-		isRendering = false;
+		if(!flag) {
+			color = nextColor;
+			nextColor = (nextColor + 1) % 6;
+			isRendering = false;
+		}
 	}
 }
 

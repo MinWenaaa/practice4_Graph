@@ -69,7 +69,6 @@ void painter::Node::draw_baseLayer() {
 }
 
 void painter::Node::draw_coverLayer(float &p) {
-    p += 0.02;
     float positions[stride_node * 2];
     getArc(positions, p*0.03);
     glBindVertexArray(VAO_cover);
@@ -84,7 +83,7 @@ void painter::Node::draw_coverLayer(float &p) {
     glDrawArrays(GL_TRIANGLE_FAN, 0, circle_pointNum + 2);
     glBindVertexArray(0);
 
-    if (p > 1) setColor();
+    if (p+0.02 > 1) setColor();
 }
 
 void painter::Node::getArc(GLfloat* data, float p) {
@@ -180,7 +179,6 @@ void painter::Edge::draw_baseLayer() {
 
 void painter::Edge::draw_coverLayer(float &p) {
     GLfloat position[8];
-    p += delta;
     transform(position, p);
     glBindVertexArray(VAO_cover);
     glBindBuffer(GL_ARRAY_BUFFER, coverVBO_p);
@@ -189,7 +187,7 @@ void painter::Edge::draw_coverLayer(float &p) {
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    if (p > 1) setColor();
+    if (p+0.02 > 1) setColor();
 
     shader->use();
     glBindVertexArray(VAO_cover);
