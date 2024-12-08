@@ -22,7 +22,7 @@ public:
 private:
 	SchoolMap();
 
-	GLuint base_map, VAO, VBO;
+	GLuint base_map, VAO, VBO, EBO;
 	int width, height, nrChannels;		// 底图影像的长宽高
 
 	Shader nodeShader, edgeShader, backgroundShader;

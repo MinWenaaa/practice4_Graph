@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4.1_undirectedGraph", "4.1_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4.3_schoolMap", "4.3_schoolMap\4.3_schoolMap.vcxproj", "{0E6130D8-B5F9-4E96-BFA3-BCE9E5FE2ECE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{6AEEA92B-1F53-471C-BE87-D30CA08FBACB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{0E6130D8-B5F9-4E96-BFA3-BCE9E5FE2ECE}.Release|x64.Build.0 = Release|x64
 		{0E6130D8-B5F9-4E96-BFA3-BCE9E5FE2ECE}.Release|x86.ActiveCfg = Release|Win32
 		{0E6130D8-B5F9-4E96-BFA3-BCE9E5FE2ECE}.Release|x86.Build.0 = Release|Win32
+		{6AEEA92B-1F53-471C-BE87-D30CA08FBACB}.Debug|x64.ActiveCfg = Debug|x64
+		{6AEEA92B-1F53-471C-BE87-D30CA08FBACB}.Debug|x64.Build.0 = Debug|x64
+		{6AEEA92B-1F53-471C-BE87-D30CA08FBACB}.Debug|x86.ActiveCfg = Debug|Win32
+		{6AEEA92B-1F53-471C-BE87-D30CA08FBACB}.Debug|x86.Build.0 = Debug|Win32
+		{6AEEA92B-1F53-471C-BE87-D30CA08FBACB}.Release|x64.ActiveCfg = Release|x64
+		{6AEEA92B-1F53-471C-BE87-D30CA08FBACB}.Release|x64.Build.0 = Release|x64
+		{6AEEA92B-1F53-471C-BE87-D30CA08FBACB}.Release|x86.ActiveCfg = Release|Win32
+		{6AEEA92B-1F53-471C-BE87-D30CA08FBACB}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
