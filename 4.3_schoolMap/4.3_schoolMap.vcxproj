@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{358bf12d-3bb9-4923-b21f-ef1d6db2885d}</ProjectGuid>
-    <RootNamespace>My41undirectedGraph</RootNamespace>
+    <ProjectGuid>{0e6130d8-b5f9-4e96-bfa3-bce9e5fe2ece}</ProjectGuid>
+    <RootNamespace>My43schoolMap</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -140,11 +140,15 @@
     <ClCompile Include="..\lib\glad.c" />
     <ClCompile Include="..\mylib\game_object.cpp" />
     <ClCompile Include="..\mylib\shader.cpp" />
-    <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="school_map.cpp" />
+    <ClCompile Include="std_imag.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="game.h" />
+    <ClInclude Include="school_map.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\UAVimagery.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

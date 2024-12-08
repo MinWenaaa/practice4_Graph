@@ -133,6 +133,7 @@ bool Minw::undirectedGraph<T, E>::insertEdge(int v1, int v2, E weight) {
 //------------------------------------------------------------------------
 template<class T, class E>
 bool Minw::undirectedGraph<T, E>::DFS(int v) {
+	std::cout << "graph DFS begin!" << std::endl;
 	//	将所有节点与边置为未访问状态
 	bool* visited_node = new bool[numVertices]();
 	for (int i = 0; i < numVertices; i++) {
@@ -196,6 +197,7 @@ bool Minw::undirectedGraph<T, E>::DFS(int v) {
 //------------------------------------------------------------------------
 template<class T, class E>
 bool Minw::undirectedGraph<T, E>::BFS(int v) {
+	std::cout << "graph BFS begin!" << std::endl;
 	//	将所有节点与边置为未访问状态
 	bool* visited_node = new bool[numVertices]();
 	for (int i = 0; i < numVertices; i++) {

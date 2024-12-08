@@ -4,6 +4,7 @@
 
 #include "game.h"
 #include<iostream>
+#include<random>
 
 //---------------------------------------------------------------------------------
 void Game::Init(GLFWwindow* window) {
@@ -28,7 +29,14 @@ void Game::ProcessInput(GLfloat x, GLfloat y) {
 		lastPoint = target;
 
 	} else if (lastPoint == target) {// 随机深度/广度优先
-		graphData.BFS(target);
+		std::random_device rd; 
+		std::mt19937 gen(rd()); 
+		std::uniform_int_distribution<> dis(0.0,1.0);
+		double random_number = dis(gen);
+
+		if (random_number > 0.5) graphData.BFS(target);
+		else graphData.DFS(target);
+
 		isRendering = true;
 		for (int i = 0; i < numVertex; i++) 
 		{

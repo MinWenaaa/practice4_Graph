@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4.1_undirectedGraph", "4.1_undirectedGraph\4.1_undirectedGraph.vcxproj", "{358BF12D-3BB9-4923-B21F-EF1D6DB2885D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4.3_schoolMap", "4.3_schoolMap\4.3_schoolMap.vcxproj", "{0E6130D8-B5F9-4E96-BFA3-BCE9E5FE2ECE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{358BF12D-3BB9-4923-B21F-EF1D6DB2885D}.Release|x64.Build.0 = Release|x64
 		{358BF12D-3BB9-4923-B21F-EF1D6DB2885D}.Release|x86.ActiveCfg = Release|Win32
 		{358BF12D-3BB9-4923-B21F-EF1D6DB2885D}.Release|x86.Build.0 = Release|Win32
+		{0E6130D8-B5F9-4E96-BFA3-BCE9E5FE2ECE}.Debug|x64.ActiveCfg = Debug|x64
+		{0E6130D8-B5F9-4E96-BFA3-BCE9E5FE2ECE}.Debug|x64.Build.0 = Debug|x64
+		{0E6130D8-B5F9-4E96-BFA3-BCE9E5FE2ECE}.Debug|x86.ActiveCfg = Debug|Win32
+		{0E6130D8-B5F9-4E96-BFA3-BCE9E5FE2ECE}.Debug|x86.Build.0 = Debug|Win32
+		{0E6130D8-B5F9-4E96-BFA3-BCE9E5FE2ECE}.Release|x64.ActiveCfg = Release|x64
+		{0E6130D8-B5F9-4E96-BFA3-BCE9E5FE2ECE}.Release|x64.Build.0 = Release|x64
+		{0E6130D8-B5F9-4E96-BFA3-BCE9E5FE2ECE}.Release|x86.ActiveCfg = Release|Win32
+		{0E6130D8-B5F9-4E96-BFA3-BCE9E5FE2ECE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
