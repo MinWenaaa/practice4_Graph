@@ -3,7 +3,7 @@
 #include<stb_image.h>
 #include<iostream>
 
-SchoolMap::SchoolMap(): width(0), height(0), nrChannels(0), 
+SchoolMap::SchoolMap(): width(0), height(0), nrChannels(0), Zoom(1.0), offset{0.0, 0.0},
 	nodeShader(Shader("../mylib/node_static.vs", "../mylib/node_static.fs")), edgeShader(Shader("../mylib/edge_basic.vs", "../mylib/edge_basic.fs")),
 	backgroundShader(Shader("../mylib/background.vs", "../mylib/background.fs")) {
 
@@ -49,15 +49,23 @@ SchoolMap::SchoolMap(): width(0), height(0), nrChannels(0),
 
 	backgroundShader.use();
 	glUniform1i(glGetUniformLocation(backgroundShader.ID, "ourTexture"), 0);
-}
+	backgroundShader.setFloat("zoom", Zoom);
+	backgroundShader.setVec2("offset", offset[0], offset[1]);
 
-void SchoolMap::Init(GLFWwindow* window) {
-	glfwMakeContextCurrent(window);
-	glfwSetMouseButtonCallback(window, mouseCallback);
 }
 
 void SchoolMap::ProcessInput(GLfloat x, GLfloat y) {
 
+}
+
+void SchoolMap::ProcessMouseScroll(float yoffset, float xpos, float ypos) {
+	Zoom += yoffset * 0.1;
+	if (Zoom < 0.8) Zoom = 0.8;
+	offset[0] += xpos * yoffset * 0.02;
+	offset[1] += ypos * yoffset * 0.02;
+	backgroundShader.setFloat("zoom", Zoom);
+	backgroundShader.setVec2("offset", offset[0], offset[1]);
+	std::cout << yoffset << std::endl;
 }
 
 void SchoolMap::Render() {
@@ -66,6 +74,3 @@ void SchoolMap::Render() {
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void mouseCallback(GLFWwindow* window, int button, int action, int mods) {
-
-}

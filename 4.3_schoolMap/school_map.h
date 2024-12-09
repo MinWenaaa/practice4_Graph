@@ -15,8 +15,8 @@ public:
 	SchoolMap(const SchoolMap&) = delete;
 	SchoolMap& operator=(const SchoolMap&) = delete;
 
-	void Init(GLFWwindow* window);
 	void ProcessInput(GLfloat x, GLfloat y);
+	void ProcessMouseScroll(float yoffset, float xpos, float ypos);
 	void Render();
 
 private:
@@ -26,6 +26,7 @@ private:
 	int width, height, nrChannels;		// 底图影像的长宽高
 
 	Shader nodeShader, edgeShader, backgroundShader;
-};
 
-void mouseCallback(GLFWwindow* window, int button, int action, int mods);
+	GLfloat Zoom;
+	GLfloat offset[2];
+};

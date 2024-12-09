@@ -15,11 +15,14 @@
 
 void processInput(GLFWwindow* window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+float zoom = 45.0f;
 int main() {
 
 	GLFWwindow* window = WindowParas::getInstance().window;
-	SchoolMap::getInstance().Init(window);
+	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
@@ -42,4 +45,11 @@ void processInput(GLFWwindow* window) {
 }
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+	WindowParas& windowPara = WindowParas::getInstance();
+	GLdouble xpos, ypos;
+	glfwGetCursorPos(window, &xpos, &ypos);
+	SchoolMap::getInstance().ProcessMouseScroll(yoffset, windowPara.screen2normalX(xpos), windowPara.screen2normalY(ypos));
 }
