@@ -2,8 +2,11 @@
 #include"school_map.h"
 #include<stb_image.h>
 #include<iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp> 
+#include <glm/gtc/type_ptr.hpp>
 
-SchoolMap::SchoolMap(): width(0), height(0), nrChannels(0), Zoom(1.0), offset{0.0, 0.0},
+SchoolMap::SchoolMap() : width(0), height(0), nrChannels(0), Zoom(1.0), offset{ 0.0, 0.0 }, pitch(0.8), yaw(0.8), rotationMatrix(glm::mat4(1.0f)),
 	nodeShader(Shader("../mylib/node_static.vs", "../mylib/node_static.fs")), edgeShader(Shader("../mylib/edge_basic.vs", "../mylib/edge_basic.fs")),
 	backgroundShader(Shader("../mylib/background.vs", "../mylib/background.fs")) {
 
@@ -47,8 +50,11 @@ SchoolMap::SchoolMap(): width(0), height(0), nrChannels(0), Zoom(1.0), offset{0.
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
+	upDateRotationMatrix();
+
 	backgroundShader.use();
 	glUniform1i(glGetUniformLocation(backgroundShader.ID, "ourTexture"), 0);
+	glUniformMatrix4fv(glGetUniformLocation(backgroundShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(rotationMatrix));
 	backgroundShader.setFloat("zoom", Zoom);
 	backgroundShader.setVec2("offset", offset[0], offset[1]);
 
@@ -68,9 +74,33 @@ void SchoolMap::ProcessMouseScroll(float yoffset, float xpos, float ypos) {
 	std::cout << yoffset << std::endl;
 }
 
+void SchoolMap::ProcessMouseDrag(float xpos, float ypos) {
+	pitch = 
+	yaw =  -(lastypos - ypos) * 0.001;
+
+	lastxpos = xpos;
+	lastypos = ypos;
+
+	//std::cout << "Pocess Dragging:" << pitch << ", " << yaw;
+	
+	upDateRotationMatrix();
+	//rotationMatrix = glm::rotate(rotationMatrix, pitch, glm::vec3(0, 1, 0));
+	backgroundShader.use();
+	glUniformMatrix4fv(glGetUniformLocation(backgroundShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(rotationMatrix));
+}
+
 void SchoolMap::Render() {
 	glBindTexture(GL_TEXTURE_2D, base_map);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
+void SchoolMap::initCursorPos(float xpos, float ypos) {
+	lastxpos = xpos;
+	lastypos = ypos;
+}
+
+void SchoolMap::upDateRotationMatrix() {
+	rotationMatrix = glm::rotate(rotationMatrix, pitch, glm::vec3(0, 1, 0));
+	rotationMatrix = glm::rotate(rotationMatrix, yaw, glm::vec3(1, 0, 0));
+}

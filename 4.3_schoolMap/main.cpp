@@ -16,13 +16,20 @@
 void processInput(GLFWwindow* window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-float zoom = 45.0f;
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+
+bool isDragging;
+
 int main() {
 
 	GLFWwindow* window = WindowParas::getInstance().window;
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetScrollCallback(window, scroll_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
+
 
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
@@ -52,4 +59,25 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 	GLdouble xpos, ypos;
 	glfwGetCursorPos(window, &xpos, &ypos);
 	SchoolMap::getInstance().ProcessMouseScroll(yoffset, windowPara.screen2normalX(xpos), windowPara.screen2normalY(ypos));
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		WindowParas& windowPara = WindowParas::getInstance();
+		GLdouble xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		SchoolMap::getInstance().initCursorPos(xpos, ypos);
+		isDragging = true;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) 
+		isDragging = false;
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+	if (isDragging) {
+		WindowParas& windowPara = WindowParas::getInstance();
+		GLdouble xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		SchoolMap::getInstance().ProcessMouseDrag(xpos, ypos);
+	}
 }
