@@ -8,6 +8,7 @@
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 #include<glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include<vector>
 #include<string>
 
@@ -24,6 +25,7 @@ public:
 	void setVec2(const std::string& name, float f1, float f2) const;
 	void setVec3(const std::string& name, float f1, float f2, float f3) const;
 	void setVec4(const std::string& name, float f1, float f2, float f3, float f4) const;
+	void setMat4(const std::string& name, const glm::mat4& mat) const;
 private:
 	void checkCompileErrors(unsigned int shader, std::string type);
 };
@@ -52,6 +54,49 @@ public:
 	
 private:
 	WindowParas();
+};
+
+const double PI = 3.1415926;
+class Camera {
+public:
+	static Camera& getInstance() {
+		static Camera instance;
+		return instance;
+	}
+	Camera(const Camera&) = delete;
+	void operator=(const Camera&) = delete;
+
+	glm::mat4 getView() {
+		return view;
+	}
+
+	void changeZoom(float zoom) { distance += zoom; upDatePos(); }
+	void changeAzimation(float delta) { azimuthAngle += delta; upDatePos(); }
+	void changeElevation(float delta) { 
+		elevationAngle += delta;
+		if (elevationAngle > (PI / 2)) elevationAngle = PI / 2;
+		if (elevationAngle < 0.4f) elevationAngle = 0.4f;
+		upDatePos();
+	}
+
+
+private:
+	Camera(): distance(2.5f), elevationAngle(0.8f), azimuthAngle(0.f) {
+		upDatePos();
+	}
+
+	void upDatePos() {
+		GLfloat plant = distance * cos(elevationAngle);
+		cameraPos = glm::vec3(plant*sin(azimuthAngle), distance * sin(elevationAngle), plant * cos(azimuthAngle));
+		view = glm::lookAt(cameraPos,
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+
+	GLfloat distance, elevationAngle, azimuthAngle;
+	glm::vec3 cameraPos;
+	glm::mat4 view;
+
 };
 
 #endif

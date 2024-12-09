@@ -5,6 +5,8 @@
 #pragma once
 #include<GLFW/glfw3.h>
 #include"shader.h"
+#define SCR_WIDTH 1600
+#define SCR_HEIGHT 1200
 
 class SchoolMap {
 public:
@@ -30,10 +32,5 @@ private:
 	int width, height, nrChannels;		// µ×Í¼Ó°ÏñµÄ³¤¿í¸ß
 
 	Shader nodeShader, edgeShader, backgroundShader;
-
-	GLfloat Zoom;						// Ëõ·Å±ÈÀý
-	GLfloat offset[2];					// Æ«ÒÆ
-	GLfloat lastxpos, lastypos;
-	GLfloat pitch, yaw;					// ¸©Ñö½ÇºÍÆ«º½½Ç
-	glm::mat4 rotationMatrix;			// Ðý×ª¾ØÕó
+	glm::mat4 model;
 };

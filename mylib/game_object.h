@@ -9,7 +9,6 @@
 
 #include<vector>
 
-const double PI = 3.14159265358979323846;
 const int circle_pointNum = 30;
 const int stride_node = circle_pointNum + 2;
 const int stride_line = 4;

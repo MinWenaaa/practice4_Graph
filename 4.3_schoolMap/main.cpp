@@ -10,8 +10,6 @@
 
 #include"school_map.h"
 
-#define SCR_WIDTH 1600
-#define SCR_HEIGHT 1200
 
 void processInput(GLFWwindow* window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -20,6 +18,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 bool isDragging;
+double lastX, lastY;
 
 int main() {
 
@@ -34,7 +33,7 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
 
-		glClearColor(0.f, 0.f, 0.f, 1.0f);
+		glClearColor(1.f, 1.f, 1.f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		SchoolMap::getInstance().Render(); 
 
@@ -54,30 +53,32 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-	WindowParas& windowPara = WindowParas::getInstance();
-	GLdouble xpos, ypos;
-	glfwGetCursorPos(window, &xpos, &ypos);
-	SchoolMap::getInstance().ProcessMouseScroll(yoffset, windowPara.screen2normalX(xpos), windowPara.screen2normalY(ypos));
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {	// Ëõ·Å
+	Camera::getInstance().changeZoom(yoffset * 0.2);
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+	WindowParas& windowPara = WindowParas::getInstance();
+	glfwGetCursorPos(window, &lastX, &lastY);
+	lastX = windowPara.screen2normalX(lastX);
+	lastY = windowPara.screen2normalY(lastY);
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		WindowParas& windowPara = WindowParas::getInstance();
-		GLdouble xpos, ypos;
-		glfwGetCursorPos(window, &xpos, &ypos);
-		SchoolMap::getInstance().initCursorPos(xpos, ypos);
 		isDragging = true;
 	}
-	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) 
+	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 		isDragging = false;
+		//SchoolMap::getInstance().ProcessInput(windowPara.screen2normalX(xpos), windowPara.screen2normalY(ypos));
+	}
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+	WindowParas& windowPara = WindowParas::getInstance();
+	xpos = windowPara.screen2normalX(xpos);
+	ypos = windowPara.screen2normalY(ypos);
 	if (isDragging) {
-		WindowParas& windowPara = WindowParas::getInstance();
-		GLdouble xpos, ypos;
-		glfwGetCursorPos(window, &xpos, &ypos);
-		SchoolMap::getInstance().ProcessMouseDrag(xpos, ypos);
+		Camera::getInstance().changeElevation(lastY - ypos);
+		Camera::getInstance().changeAzimation(lastX - xpos);
+		lastX = xpos;
+		lastY = ypos;
 	}
 }
