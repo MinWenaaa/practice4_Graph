@@ -22,13 +22,13 @@ public:
 	Shader(const char* vertexPath, const char* fragmentPath);
 
 	void use();
-	void setBool(const std::string& name, bool value) const;
-	void setInt(const std::string& name, int value) const;
-	void setFloat(const std::string& name, float value) const;
-	void setVec2(const std::string& name, float f1, float f2) const;
-	void setVec3(const std::string& name, float f1, float f2, float f3) const;
-	void setVec4(const std::string& name, float f1, float f2, float f3, float f4) const;
-	void setMat4(const std::string& name, const glm::mat4& mat) const;
+	void setBool(const std::string& name, bool value);
+	void setInt(const std::string& name, int value);
+	void setFloat(const std::string& name, float value);
+	void setVec2(const std::string& name, float f1, float f2);
+	void setVec3(const std::string& name, float f1, float f2, float f3);
+	void setVec4(const std::string& name, float f1, float f2, float f3, float f4);
+	void setMat4(const std::string& name, const glm::mat4& mat);
 private:
 	void checkCompileErrors(unsigned int shader, std::string type);
 };
@@ -77,11 +77,22 @@ public:
 	glm::mat4 getView() {
 		return view;
 	}
+	void changeRotation() { rotation = !rotation; }
+	bool getRotation() { return rotation; }
+
+	void init() {
+		elevationAngle = 0.6f; azimuthAngle = 0.f;
+		upDatePos();
+	}
 
 	void changeZoom(float zoom) { distance -= zoom; upDatePos(); }
-	void changeAzimation(float delta) { azimuthAngle += delta; upDatePos(); }
-	void changeElevation(float delta) {		// 暂时关闭视角旋转
-		//elevationAngle += delta;
+	void changeAzimation(float delta) { 
+		if (rotation){ 
+				azimuthAngle += delta; upDatePos();
+		}
+	}
+	void changeElevation(float delta) {		
+		elevationAngle += delta;
 		if (elevationAngle > (PI / 2)) elevationAngle = PI / 2;
 		if (elevationAngle < 0.4f) elevationAngle = 0.4f;
 		upDatePos();
@@ -105,6 +116,8 @@ private:
 	glm::vec3 cameraPos;
 	glm::vec3 cameraTarget;
 	glm::mat4 view;
+
+	bool rotation = false;
 
 };
 

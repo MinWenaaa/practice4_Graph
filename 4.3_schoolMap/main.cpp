@@ -77,7 +77,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 		isDragging = false;
-		if ((glfwGetTime() - press_time) < 0.15) {	// 释放时间小于间隔，判定为点击操作
+		if ((glfwGetTime() - press_time) < 0.15 && !Camera::getInstance().getRotation()) {	// 释放时间小于间隔，判定为点击操作
 			SchoolMap::getInstance().ProcessInput(lastX, lastY);
 		}
 	}

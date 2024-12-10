@@ -146,11 +146,13 @@
     <ClCompile Include="..\lib\glad.c" />
     <ClCompile Include="..\mylib\game_object.cpp" />
     <ClCompile Include="..\mylib\shader.cpp" />
+    <ClCompile Include="geo_features.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="school_map.cpp" />
     <ClCompile Include="std_imag.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="geo_features.h" />
     <ClInclude Include="school_map.h" />
   </ItemGroup>
   <ItemGroup>

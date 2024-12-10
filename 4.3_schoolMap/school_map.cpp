@@ -6,13 +6,15 @@
 
 #include"school_map.h"
 
-#include<iostream>
 #include <array>
 #include<cmath>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 SchoolMap::SchoolMap() : width(0), height(0), nrChannels(0),
 	nodeShader(Shader("../mylib/node_static.vs", "../mylib/node_static.fs")), edgeShader(Shader("../mylib/edge_basic.vs", "../mylib/edge_basic.fs")),
-	backgroundShader(Shader("../mylib/background.vs", "../mylib/background.fs")) {
+	backgroundShader(Shader("../mylib/background.vs", "../mylib/background.fs")), cubeShader(Shader("../mylib/cube.vs", "../mylib/cube.fs")) {
 
 	glGenTextures(1, &base_map);
 	glBindTexture(GL_TEXTURE_2D, base_map);
@@ -54,38 +56,76 @@ SchoolMap::SchoolMap() : width(0), height(0), nrChannels(0),
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	backgroundShader.use();
 	model = glm::mat4(1.0f);
 	projection = glm::mat4(1.0f);
 	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	projection = glm::perspective(FOV, WindowParas::getInstance().defaultAlpha, 0.1f, 100.0f);
 	backgroundShader.setMat4("model", model);
 	backgroundShader.setMat4("projection", projection);
+	cubeShader.setMat4("model", model);
+	cubeShader.setMat4("projection", projection);
+	backgroundShader.use();
 	glUniform1i(glGetUniformLocation(backgroundShader.ID, "ourTexture"), 0);
 
+	loadData("data.txt");
+	buildings.push_back(Building(0, 0, &cubeShader, "??"));
 }
 
 void SchoolMap::ProcessInput(GLfloat x, GLfloat y) {
-	//std::cout << "click at:" << x << ", " << y << std::endl;
 	float realX, realY;
 	Camera::getInstance().get2Dxy(x*WindowParas::getInstance().defaultAlpha, y, realX, realY);
-
-	std::cout << "result: " << realX << "," << realY << std::endl;
-	//glm::mat4 coff = glm::inverse(projection * Camera::getInstance().getView() * model);
-	//glm::vec4 real = coff * glm::vec4(x, y, Depth, 1.f);
-	//std::cout << "real cord:" << real.x << ", " << real.y << "," << real.z << std::endl;
+	std::cout << realX << " " << realY << std::endl;
 }
 
 void SchoolMap::Render() {
 	backgroundShader.setMat4("view", Camera::getInstance().getView());
+	cubeShader.setMat4("view", Camera::getInstance().getView());
+	backgroundShader.use();
 	glBindTexture(GL_TEXTURE_2D, base_map);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	cubeShader.use();
+	for (int i = 0; i < buildings.size();i++) {
+		buildings[i].draw();
+	}
 }
 
 void SchoolMap::adaptation(float a) {
 	projection = glm::perspective(FOV, a, 0.1f, 100.0f);
 	backgroundShader.setMat4("projection", projection);
+	cubeShader.setMat4("projection", projection);
+}
+
+void SchoolMap::loadData(std::string fileName) {
+	std::ifstream file(fileName);
+	std::string line;
+	while (std::getline(file, line)) {
+		if (line == "BEGIN::POI_DATA") {
+			break;
+		}
+	}
+
+	int count = 0;
+	std::string name;
+	float x, y;
+	while (std::getline(file, line)) {
+		if (line == "END::POI_DATA") break;
+		if (line.empty()) continue;
+		if (!(count % 2)) {
+			name = line;
+			std::cout << " getName:" << line << std::endl;
+		} else {
+			std::istringstream iss(line);
+			std::string part1, part2;
+			iss >> x >> y;
+			//char* endptr;
+			//x = std::stof(part1);
+			//y = std::stof(part2);
+			std::cout << "cord: " << x << " " << y << std::endl;
+			buildings.push_back(Building(x, y, &cubeShader, name));
+		}
+		count++;
+	}
 }
 
 void MyGUI::init(GLFWwindow* window) {
@@ -95,12 +135,12 @@ void MyGUI::init(GLFWwindow* window) {
 	ImGui_ImplOpenGL3_Init("#version 330"); // 使用适合你环境的着色器版本字符串
 	ImGui::StyleColorsClassic();
 
-//	ImFont* font = io.Fonts->AddFontFromFileTTF(
-//		"../imgui/SIMYOU.TTF", 50, nullptr, io.Fonts->GetGlyphRangesChineseSimplifiedCommon()
-//	);
-//	IM_ASSERT(font != nullptr);
-//	io.Fonts->Build();
-//
+	ImFont* font = io.Fonts->AddFontFromFileTTF(
+		"../imgui/Arial.ttf", 46, nullptr, io.Fonts->GetGlyphRangesChineseSimplifiedCommon()
+	);
+	IM_ASSERT(font != nullptr);
+	io.Fonts->Build();
+
 }
 
 void MyGUI::Render(int width, int height) {
@@ -108,12 +148,13 @@ void MyGUI::Render(int width, int height) {
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 
+	Camera& camera = Camera::getInstance();
 	ImGui::SetNextWindowPos(ImVec2(WindowParas::getInstance().SCREEN_WIDTH - width, 0));
 	ImGui::SetNextWindowSize(ImVec2(width, height));
 	ImGui::Begin("Drag Button");
-	if (ImGui::Button("Button"))
-	{
-		//单击事件处理程序
+	if (ImGui::Button(camera.getRotation() ? "Disable Rotation" : "Enable Rotation")) {
+		camera.changeRotation();
+		if (!camera.getRotation()) camera.init();
 	}
 	ImGui::Text("A Text String");
 

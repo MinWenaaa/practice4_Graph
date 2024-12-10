@@ -9,8 +9,11 @@
 #include<imgui_impl_opengl3.h>
 
 #include"shader.h"
+#include"geo_features.h"
 
 #include<cmath>
+#include<string>
+#include<vector>
 
 class SchoolMap {
 public:
@@ -28,12 +31,15 @@ public:
 private:
 	SchoolMap();
 
+	void loadData(std::string fileName);
+
 	GLuint base_map, VAO, VBO, EBO;
 	int width, height, nrChannels;		// 底图影像的长宽高
 
-	Shader nodeShader, edgeShader, backgroundShader;
+	Shader nodeShader, edgeShader, backgroundShader, cubeShader;
 	glm::mat4 model, projection;
 
+	std::vector<Building> buildings;
 };
 
 class MyGUI {

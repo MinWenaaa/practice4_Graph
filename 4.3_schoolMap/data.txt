@@ -1,0 +1,54 @@
+BEGIN::POI_DATA
+Zhuo Cheng Building (Teaching Service Center)
+-0.259477 0.618909
+National Key Laboratory of Geological Processes and Mineral Resources
+-0.210281 0.335599
+National Key Laboratory of Biogeology and Environmental Geology
+-0.209003 0.0876075
+School of Materials and Chemistry
+-0.470191 0.353518
+School of Environment
+-0.548559 0.0560953
+School of Computer Science
+0.118163 0.614903
+School of Geography and Information Engineering (GIS Center)
+0.348771 0.614903
+School of Economics and Management (Under Construction)
+-0.857147 0.382263
+Zhuo Zhi Building (General Teaching Building 1)
+0.0855629 0.0895793
+Zhuo Xing Building (General Teaching Building 2)
+0.0893218 0.325232
+Zhuo Yue Library (Under Construction)
+-0.0753811 -0.285076
+Zhuo Ran Building (Student Activity Center)
+0.400516 -0.176553
+Future Stadium (Under Construction) бя Outdoor Sports Field
+0.749192 0.48385
+Future Gymnasium (Under Construction)
+0.689904 0.12006
+Zhuo Yuan Building (Faculty Activity Center, Faculty Canteen)
+0.642434 -0.155762
+Wen Bo Garden (Postdoctoral Accommodation)
+0.805209 -0.137944
+Wen Bo Garden (Group 5 Graduate Student Accommodation)
+0.811846 -0.285254
+Wen Bo Garden (Group 5 Graduate Student Accommodation)
+0.82918 -0.418989
+Wen Xin Garden (Group 3 Graduate Student Accommodation)
+0.63374 -0.412259
+Wen Shu Garden (Group 2 Undergraduate Female Accommodation)
+0.209442 -0.625298
+Wen Zhong Garden (Group 1 Undergraduate Male Accommodation)
+-0.403061 -0.556802
+Wen Cheng Garden (Group 4 International Student Accommodation)
+-0.867647 -0.318803
+Jin Ding Garden (Student Canteen 1)
+-0.0628831 -0.668273
+Yu Cui Garden (Student Canteen 2, Ethnic Cuisine Restaurant)
+-0.731352 -0.40685
+School Hospital (Under Construction) бя Temporary Medical Point
+-0.843572 0.12006
+Energy Center, Property Center
+-0.950028 0.6389
+END::POI_DATA

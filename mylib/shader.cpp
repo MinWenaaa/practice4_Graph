@@ -77,32 +77,38 @@ void Shader::use() {
 	//std::cout << glGetError() << std::endl;
 }
 // ------------------------------------------------------------------------
-void Shader::setBool(const std::string& name, bool value) const {
+void Shader::setBool(const std::string& name, bool value) {
+	use();
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
 }
 // ------------------------------------------------------------------------
-void Shader::setInt(const std::string& name, int value) const {
+void Shader::setInt(const std::string& name, int value) {
+	use();
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 // ------------------------------------------------------------------------
-void Shader::setFloat(const std::string& name, float value) const {
+void Shader::setFloat(const std::string& name, float value) {
+	use();
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 // ------------------------------------------------------------------------
-void Shader::setVec2(const std::string& name, float f1, float f2) const {
+void Shader::setVec2(const std::string& name, float f1, float f2) {
+	use();
 	glUniform2f(glGetUniformLocation(ID, name.c_str()), f1, f2);
 }
 // ------------------------------------------------------------------------
-void Shader::setVec3(const std::string& name, float f1, float f2, float f3) const {
+void Shader::setVec3(const std::string& name, float f1, float f2, float f3) {
+	use();
 	glUniform3f(glGetUniformLocation(ID, name.c_str()), f1, f2, f3);
 }
 // ------------------------------------------------------------------------
-void Shader::setVec4(const std::string& name, float f1, float f2, float f3, float f4) const {
+void Shader::setVec4(const std::string& name, float f1, float f2, float f3, float f4) {
+	use();
 	glUniform4f(glGetUniformLocation(ID, name.c_str()), f1, f2, f3, f4);
 }
 
-void Shader::setMat4(const std::string& name, const glm::mat4& mat) const
-{
+void Shader::setMat4(const std::string& name, const glm::mat4& mat) {
+	use();
 	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
@@ -156,14 +162,11 @@ GLfloat WindowParas::normal2orthoY(GLfloat normalY) const {
 
 void Camera::get2Dxy(float oX, float oY, float& rX, float& rY) {
 	//std::cout << "angle correct" << atan(oX / f) << ", " << atan(oY / f) << std::endl;
-	//oX = 0.1; oY = 0;
-	//oX = 0; oY = 0.5;		// Í¨¹ý
-	//oX = 0.1; oY = 0.5;
 	float newElevation = elevationAngle - atan(oY / f);
 	float plantDistance = cameraPos.y / tan(newElevation);
 	rX = plantDistance * sin(azimuthAngle) - cameraPos.x;
 	rY = plantDistance * cos(azimuthAngle) - cameraPos.z;
-	std::cout << "delta:" << newElevation << std::endl;
+	//std::cout << "delta:" << newElevation << std::endl;
 	//float plantDistance;
 	//if (newElevation > 0) plantDistance = distance * sin(newElevation) / sin(elevationAngle-newElevation);
 	//else plantDistance = distance * sin(-newElevation) / sin(elevationAngle);
@@ -171,7 +174,7 @@ void Camera::get2Dxy(float oX, float oY, float& rX, float& rY) {
 	//rY = -cos(azimuthAngle) * plantDistance;
 	float deltaHorizon = oX / f * cameraPos.y / sin(newElevation);
 
-	std::cout << "distance: " << plantDistance << ", " << deltaHorizon << std::endl;
+	//std::cout << "distance: " << plantDistance << ", " << deltaHorizon << std::endl;
 	rX += cos(azimuthAngle) * deltaHorizon;
 	rY += sin(azimuthAngle) * deltaHorizon;
 
