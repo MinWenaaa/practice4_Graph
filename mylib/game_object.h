@@ -70,4 +70,8 @@ namespace painter {
 		void setColor();
 	};
 
+	class stample {
+	public:
+
+	};
 }

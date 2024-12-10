@@ -12,6 +12,9 @@
 #include<vector>
 #include<string>
 
+const float FOV = glm::radians(60.f);
+const float f = 1 / tan(FOV / 2);
+
 class Shader {
 public:
 	GLuint ID;
@@ -39,11 +42,16 @@ public:
 	WindowParas(const WindowParas&) = delete;
 	void operator=(const WindowParas&) = delete;
 
+	void setRatio(GLfloat ratio) {
+		aspectRatio = ratio; 
+		updateScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	}
+	void updateScreenSize(GLint width, GLint height);
+
 	GLFWwindow* window;
-	const GLint WINDOW_WIDTH = 960;
-	const GLint WINDOW_HEIGHT = 720;
-	const GLint SIDEBAR_WIDTH = 300;
 	GLint SCREEN_WIDTH = 1600, SCREEN_HEIGHT = 1200;
+	GLfloat aspectRatio = 1;
+	GLint displayWidth, displayHeight;
 	GLfloat xScale = 1, yScale = 1;
 	GLfloat defaultAlpha;
 
@@ -70,31 +78,32 @@ public:
 		return view;
 	}
 
-	void changeZoom(float zoom) { distance += zoom; upDatePos(); }
+	void changeZoom(float zoom) { distance -= zoom; upDatePos(); }
 	void changeAzimation(float delta) { azimuthAngle += delta; upDatePos(); }
-	void changeElevation(float delta) { 
-		elevationAngle += delta;
+	void changeElevation(float delta) {		// 暂时关闭视角旋转
+		//elevationAngle += delta;
 		if (elevationAngle > (PI / 2)) elevationAngle = PI / 2;
 		if (elevationAngle < 0.4f) elevationAngle = 0.4f;
 		upDatePos();
 	}
 
+	void get2Dxy(float oX, float oy, float& rX, float& rY);
+
 
 private:
-	Camera(): distance(2.5f), elevationAngle(0.8f), azimuthAngle(0.f) {
+	Camera(): distance(2.f), elevationAngle(0.6f), azimuthAngle(0.f), cameraTarget(glm::vec3(0.f,0.f,0.f)) {
 		upDatePos();
 	}
 
 	void upDatePos() {
 		GLfloat plant = distance * cos(elevationAngle);
 		cameraPos = glm::vec3(plant*sin(azimuthAngle), distance * sin(elevationAngle), plant * cos(azimuthAngle));
-		view = glm::lookAt(cameraPos,
-			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(0.0f, 1.0f, 0.0f));
+		view = glm::lookAt(cameraPos, cameraTarget, glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
 	GLfloat distance, elevationAngle, azimuthAngle;
 	glm::vec3 cameraPos;
+	glm::vec3 cameraTarget;
 	glm::mat4 view;
 
 };

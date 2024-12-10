@@ -4,9 +4,13 @@
 
 #pragma once
 #include<GLFW/glfw3.h>
+#include<imgui.h>
+#include<imgui_impl_glfw.h>
+#include<imgui_impl_opengl3.h>
+
 #include"shader.h"
-#define SCR_WIDTH 1600
-#define SCR_HEIGHT 1200
+
+#include<cmath>
 
 class SchoolMap {
 public:
@@ -18,19 +22,37 @@ public:
 	SchoolMap& operator=(const SchoolMap&) = delete;
 
 	void ProcessInput(GLfloat x, GLfloat y);
-	void ProcessMouseScroll(float yoffset, float xpos, float ypos);
-	void ProcessMouseDrag(float xpos, float ypos);
 	void Render();
-
-	void initCursorPos(float xpos, float ypos);
+	void adaptation(float a);
 
 private:
 	SchoolMap();
-	void upDateRotationMatrix();
 
 	GLuint base_map, VAO, VBO, EBO;
 	int width, height, nrChannels;		// 底图影像的长宽高
 
 	Shader nodeShader, edgeShader, backgroundShader;
-	glm::mat4 model;
+	glm::mat4 model, projection;
+
+};
+
+class MyGUI {
+public:
+	static MyGUI& getInstance() {
+		static MyGUI instance;
+		return instance;
+	}
+	MyGUI(const MyGUI&) = delete;
+	MyGUI& operator=(const MyGUI&) = delete;
+
+	void init(GLFWwindow* window);
+	void Render(int w, int h);
+
+private:
+	MyGUI() {}
+
+	bool isShowDrag = false;
+	std::string text = "";
+	float fValue = 0.5f;
+
 };
