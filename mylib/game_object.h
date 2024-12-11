@@ -69,9 +69,4 @@ namespace painter {
 		void transform(GLfloat* data, float p);
 		void setColor();
 	};
-
-	class stample {
-	public:
-
-	};
 }

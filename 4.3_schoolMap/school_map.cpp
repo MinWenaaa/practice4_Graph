@@ -12,7 +12,14 @@
 #include <fstream>
 #include <sstream>
 
-SchoolMap::SchoolMap() : width(0), height(0), nrChannels(0),
+namespace school_map {
+	std::ostream& operator<<(std::ostream& os, const Node& node) {
+		os << node.label << " " << node.x << " " << node.y << std::endl;
+		return os;
+	}
+}
+
+SchoolMap::SchoolMap() : width(0), height(0), nrChannels(0), schoolRoad(100), numNode(0), numEdge(0),
 	nodeShader(Shader("../mylib/node_static.vs", "../mylib/node_static.fs")), edgeShader(Shader("../mylib/edge_basic.vs", "../mylib/edge_basic.fs")),
 	backgroundShader(Shader("../mylib/background.vs", "../mylib/background.fs")), cubeShader(Shader("../mylib/cube.vs", "../mylib/cube.fs")) {
 
@@ -67,7 +74,7 @@ SchoolMap::SchoolMap() : width(0), height(0), nrChannels(0),
 	backgroundShader.use();
 	glUniform1i(glGetUniformLocation(backgroundShader.ID, "ourTexture"), 0);
 
-	loadData("data.txt");
+	loadBuildingData("data.txt");
 	buildings.push_back(Building(0, 0, &cubeShader, "??"));
 }
 
@@ -75,6 +82,8 @@ void SchoolMap::ProcessInput(GLfloat x, GLfloat y) {
 	float realX, realY;
 	Camera::getInstance().get2Dxy(x*WindowParas::getInstance().defaultAlpha, y, realX, realY);
 	std::cout << realX << " " << realY << std::endl;
+	std::cout << "distance: " << sqrt(pow((realX - lastX), 2) + pow((realY - lastY), 2));
+	lastX = realX; lastY = realY;
 }
 
 void SchoolMap::Render() {
@@ -96,15 +105,12 @@ void SchoolMap::adaptation(float a) {
 	cubeShader.setMat4("projection", projection);
 }
 
-void SchoolMap::loadData(std::string fileName) {
+void SchoolMap::loadBuildingData(std::string fileName) {
 	std::ifstream file(fileName);
 	std::string line;
 	while (std::getline(file, line)) {
-		if (line == "BEGIN::POI_DATA") {
-			break;
-		}
+		if (line == "BEGIN::POI_DATA") break;
 	}
-
 	int count = 0;
 	std::string name;
 	float x, y;
@@ -113,18 +119,53 @@ void SchoolMap::loadData(std::string fileName) {
 		if (line.empty()) continue;
 		if (!(count % 2)) {
 			name = line;
-			std::cout << " getName:" << line << std::endl;
+			//std::cout << " getName:" << line << std::endl;
 		} else {
 			std::istringstream iss(line);
 			std::string part1, part2;
 			iss >> x >> y;
-			//char* endptr;
-			//x = std::stof(part1);
-			//y = std::stof(part2);
-			std::cout << "cord: " << x << " " << y << std::endl;
+			//std::cout << "cord: " << x << " " << y << std::endl;
 			buildings.push_back(Building(x, y, &cubeShader, name));
 		}
 		count++;
+	}
+}
+
+void SchoolMap::addNode(school_map::Node node) {
+	nodes.push_back(node);
+	schoolRoad.insertVertex(numNode);
+	numNode++;
+}
+void SchoolMap::addEdge(int v1, int v2) {
+	if (v1 < 0 || v1 >= numNode || v2 < 0 || v2 >= numNode) return;
+	float positions[] = { nodes[v1].x, nodes[v1].y, nodes[v2].x, nodes[v2].y };
+	roads.push_back(painter::Edge(positions, 0, v1, v2, v1, &edgeShader));
+	schoolRoad.insertEdge(v1, v2, sqrt(pow(nodes[v1].x - nodes[v2].x, 2) + pow(nodes[v1].y - nodes[v2].y, 2));
+}
+//------------------------------------------------------------------------
+void SchoolMap::loadGraphData(std::string fileName) {
+	std::ifstream inFile(fileName);
+	std::string line;
+	while (line != "MinW::undirectedGraph_HEADER: ") {
+		std::getline(inFile, line);
+	}
+	while (line != "BEGIN::NODEDATA") {
+		std::getline(inFile, line);
+	}
+	while (line != "END::NODEDATA") {
+		std::getline(inFile, line);
+		school_map::Node temp(line);
+		addNode(temp);
+	}
+	while (line != "BEGIN::EDGEDATA") {
+		std::getline(inFile, line);
+	}
+	int v1, v2;
+	while (line != "END::EDGEDATA") {
+		std::getline(inFile, line);
+		std::istringstream iss(line);
+		iss >> v1 >> v2;
+		addEdge(v1, v2);
 	}
 }
 

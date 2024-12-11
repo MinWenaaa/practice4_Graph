@@ -10,10 +10,28 @@
 
 #include"shader.h"
 #include"geo_features.h"
+#include"graph.hpp"
+#include"game_object.h"
 
 #include<cmath>
 #include<string>
 #include<vector>
+#include<iostream>
+#include<sstream>
+
+namespace school_map {
+	struct Node {
+		float x, y;
+		int label;
+		Node() : x(0), y(0), label(0) {}
+		Node(const std::string& str) {
+			std::istringstream iss(str);
+			iss >> label >> x >> y;
+		}
+	};
+
+	std::ostream& operator<<(std::ostream& os, const Node& node);
+}
 
 class SchoolMap {
 public:
@@ -31,7 +49,11 @@ public:
 private:
 	SchoolMap();
 
-	void loadData(std::string fileName);
+	void addNode(school_map::Node node);
+	void addEdge(int v1, int v2);
+
+	void loadBuildingData(std::string fileName);
+	void loadGraphData(std::string fileName);
 
 	GLuint base_map, VAO, VBO, EBO;
 	int width, height, nrChannels;		// 底图影像的长宽高
@@ -40,6 +62,13 @@ private:
 	glm::mat4 model, projection;
 
 	std::vector<Building> buildings;
+	std::vector<school_map::Node> nodes;
+	std::vector<painter::Edge> roads;
+	int numNode, numEdge;
+
+	Minw::undirectedGraph<int, float> schoolRoad;
+
+	float lastX= 0, lastY = 0;
 };
 
 class MyGUI {

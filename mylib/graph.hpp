@@ -4,6 +4,7 @@
 
 #pragma once
 #include<iostream>
+#include<fstream>
 
 namespace Minw {
 
@@ -26,7 +27,7 @@ namespace Minw {
 		T data;
 		int depth;
 		Edge<T, E>* adj;
-		Node() :data(0), adj(nullptr), depth(-1) {};
+		Node() :data(T()), adj(nullptr), depth(-1) {};
 	};
 
 	template <class T, class E>
@@ -47,6 +48,8 @@ namespace Minw {
 
 		int getDepthN(int v);
 		int getDepthE(int v1, int v2);
+
+		void output2File(std::string fileName);
 	private:
 		int maxVertices;
 		int numEdges;
@@ -257,4 +260,35 @@ int Minw::undirectedGraph<T, E>::getDepthE(int v1, int v2) {
 	}
 
 	if (!p) return -1;
+}
+//------------------------------------------------------------------------
+template<class T, class E>
+void Minw::undirectedGraph<T, E>::output2File(std::string fileName) {
+	std::ofstream outFile(fileName);
+	if (!outFile.is_open()) {
+		std::cerr << "无法打开文件进行写入。\n";
+	} else {
+		outFile << "MinW::undirectedGraph_HEADER: " << std::endl;
+		outFile << "MAXVERTEX: " << maxVertices << "\nNUMVERTEX: " << numVertices << "\nNUMEDGES: " << numEdges << std::endl;
+		outFile << "BEGIN::NODEDATA" << std::endl;
+		for (int i = 0; i < numVertices; i++) {
+			outFile << nodeTable[i];
+		}
+		outFile << "END::NODETADA" << std::endl << "BEGIN::EDGEDATA" << std::endl;
+		bool* isWritten = new bool[numVertices * numVertices]();
+		for (int i = 0; i < numVertices; i++) {
+			Edge<T, E>* p = nodeTable[i].adj;
+			while (p) {
+				if (isWritten[i * numVertices + p->dest]) {
+					p = p->link;
+					continue;
+				}
+				outFile << i << " " << p->dest << " " << p->cost << std::endl;
+				isWritten[i * numVertices + p->dest] = true;
+				isWritten[p->dest * numVertices + i] = true;
+			}
+		}
+		outFile << "END::EDGEDATA";
+		delete[] isWritten;
+	}
 }
