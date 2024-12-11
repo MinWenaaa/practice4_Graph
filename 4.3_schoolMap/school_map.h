@@ -46,7 +46,7 @@ public:
 	void Render();
 	void adaptation(float a);
 
-	glm::mat4 model, projection;
+	glm::mat4 projection;
 
 private:
 	SchoolMap();

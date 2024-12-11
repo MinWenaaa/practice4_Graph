@@ -77,47 +77,64 @@ public:
 	glm::mat4 getView() {
 		return view;
 	}
-	void changeRotation() { rotation = !rotation; }
-	bool getRotation() { return rotation; }
+	void changeMoving() { mapMoving = !mapMoving; }
+	bool getMoving() { return mapMoving; }
 
 	void init() {
 		elevationAngle = PI/2; azimuthAngle = 0.f;
-		upDatePos();
+		upDatePos(); upDataView();
 	}
 
-	void changeZoom(float zoom) { distance -= zoom; upDatePos(); }
-	void changeAzimation(float delta) { 
-		if (rotation){ 
-				azimuthAngle += delta; upDatePos();
+	void changeZoom(float zoom) { distance -= zoom; if (distance < 0.5f) distance = 0.5f; upDatePos(); upDataView(); }
+	void chopdeltaX(float delta) { 
+		if (!mapMoving) {
+			azimuthAngle += delta;
+			upDatePos();
 		}
+		else {
+			offset.x += delta;
+			cameraTarget.x += delta;
+		}
+		upDataView();
 	}
-	void changeElevation(float delta) {		
-		elevationAngle += delta;
-		if (elevationAngle > (PI / 2)) elevationAngle = PI / 2;
-		if (elevationAngle < 0.4f) elevationAngle = 0.4f;
-		upDatePos();
+	void changeElevation(float delta) {	
+		if (mapMoving){
+			offset.y += delta;
+			cameraTarget.y += delta;
+		}
+		else {
+			elevationAngle += delta;
+			if (elevationAngle > (PI / 2)) elevationAngle = PI / 2;
+			if (elevationAngle < 0.4f) elevationAngle = 0.4f; 
+			upDatePos();
+		}
+		upDataView();
 	}
 
 	void get2Dxy(float oX, float oy, float& rX, float& rY);
 
 
 private:
-	Camera(): distance(2.f), elevationAngle(0.6f), azimuthAngle(0.2f), cameraTarget(glm::vec3(0.f,0.f,0.f)) {
+	Camera(): distance(2.f), elevationAngle(0.6f), azimuthAngle(0.f), cameraTarget(glm::vec3(0.f,0.f,0.f)) {
 		upDatePos();
 	}
 
 	void upDatePos() {
 		GLfloat plant = distance * cos(elevationAngle);
-		cameraPos = glm::vec3(plant*sin(azimuthAngle), distance * sin(elevationAngle), plant * cos(azimuthAngle));
-		view = glm::lookAt(cameraPos, cameraTarget, glm::vec3(0.0f, 1.0f, 0.0f));
+		cameraPos = glm::vec3(plant*sin(azimuthAngle), -plant * cos(azimuthAngle), distance * sin(elevationAngle)) + offset;
+		//view = glm::lookAt(cameraPos, glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 0.0f, 1.0f));
+	}
+
+	void upDataView() {
+		view = glm::lookAt(cameraPos, cameraTarget, glm::vec3(0.0f, 0.0f, 1.0f));
 	}
 
 	GLfloat distance, elevationAngle, azimuthAngle;
-	glm::vec3 cameraPos;
+	glm::vec3 cameraPos, offset;
 	glm::vec3 cameraTarget;
 	glm::mat4 view;
 
-	bool rotation = false;
+	bool mapMoving = false;
 
 };
 

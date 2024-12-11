@@ -3531,7 +3531,7 @@ static void ShowDemoWindowLayout()
     if (ImGui::TreeNode("Clipping"))
     {
         static ImVec2 size(100.0f, 100.0f);
-        static ImVec2 offset(30.0f, 30.0f);
+        static ImVec2 cameraTarget(30.0f, 30.0f);
         ImGui::DragFloat2("size", (float*)&size, 0.5f, 1.0f, 200.0f, "%.0f");
         ImGui::TextWrapped("(Click and drag to scroll)");
 
@@ -3555,8 +3555,8 @@ static void ShowDemoWindowLayout()
             ImGui::InvisibleButton("##canvas", size);
             if (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left))
             {
-                offset.x += ImGui::GetIO().MouseDelta.x;
-                offset.y += ImGui::GetIO().MouseDelta.y;
+                cameraTarget.x += ImGui::GetIO().MouseDelta.x;
+                cameraTarget.y += ImGui::GetIO().MouseDelta.y;
             }
             ImGui::PopID();
             if (!ImGui::IsItemVisible()) // Skip rendering as ImDrawList elements are not clipped.
@@ -3565,7 +3565,7 @@ static void ShowDemoWindowLayout()
             const ImVec2 p0 = ImGui::GetItemRectMin();
             const ImVec2 p1 = ImGui::GetItemRectMax();
             const char* text_str = "Line 1 hello\nLine 2 clip me!";
-            const ImVec2 text_pos = ImVec2(p0.x + offset.x, p0.y + offset.y);
+            const ImVec2 text_pos = ImVec2(p0.x + cameraTarget.x, p0.y + cameraTarget.y);
             ImDrawList* draw_list = ImGui::GetWindowDrawList();
             switch (n)
             {

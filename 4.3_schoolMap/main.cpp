@@ -80,22 +80,19 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 		isDragging = false;
 		if ((glfwGetTime() - press_time) < 0.15 /*&& !Camera::getInstance().getRotation()*/) {	// 释放时间小于间隔，判定为点击操作
-			std::cout << "click at:" << x << ", " << y << std::endl;
+			std::cout << "click at:" << x << " " << y << std::endl;
 			GLfloat depth;
 			glReadPixels(x, WindowParas::getInstance().SCREEN_HEIGHT-y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
-			glm::mat4 coff = glm::inverse(SchoolMap::getInstance().projection * Camera::getInstance().getView() * SchoolMap::getInstance().model);
-			glm::vec4 origin = glm::vec4(lastX, lastY, 2.f*depth-1.f, 1.f);
-			glm::mat4 inverseMat = glm::inverse(coff);
-			glm::vec4 worldPos = inverseMat * origin;
-			glm::vec3 newVec = glm::vec3(worldPos.x, worldPos.y, worldPos.z) / worldPos.w;
-			//glm::mat4 inverseProjection = glm::inverse(SchoolMap::getInstance().projection);
-			//glm::mat4 inverseView = glm::inverse(Camera::getInstance().getView());
-			//glm::vec4 viewSpacePos = inverseProjection * origin;
-			//viewSpacePos /= viewSpacePos.w; 
-			//newVec = inverseView * viewSpacePos;
-			//newVec /= newVec.w; // 如果不是正交投影，则需要再次透视除法
-			std::cout << "newVec: " << newVec.x << ", " << newVec.y << ", " << newVec.z << std::endl;
-			SchoolMap::getInstance().ProcessInput(newVec.x, newVec.y);
+			glm::vec4 worldSpacePos;
+			glm::mat4 inverseProjection = glm::inverse(SchoolMap::getInstance().projection);
+			glm::mat4 inverseView = glm::inverse(Camera::getInstance().getView());
+
+			glm::vec4 clipSpacePos(lastX, lastY, 2.f * depth - 1.f, 1.f);
+			glm::vec4 viewSpacePos = inverseProjection * clipSpacePos;
+			viewSpacePos /= viewSpacePos.w; 
+			worldSpacePos = inverseView * viewSpacePos;
+			worldSpacePos /= worldSpacePos.w; 
+			std::cout << "newVec: " << worldSpacePos.x << " " << worldSpacePos.y << " " << worldSpacePos.z << std::endl;
 		}
 	}
 }
@@ -106,7 +103,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 	ypos = windowPara.screen2normalY(ypos);
 	if (isDragging) {
 		Camera::getInstance().changeElevation(lastY - ypos);
-		Camera::getInstance().changeAzimation(lastX - xpos);
+		Camera::getInstance().chopdeltaX(lastX - xpos);
 		lastX = xpos;
 		lastY = ypos;
 	}

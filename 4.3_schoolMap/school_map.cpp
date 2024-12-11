@@ -63,15 +63,10 @@ SchoolMap::SchoolMap() : width(0), height(0), nrChannels(0), schoolRoad(100), nu
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	model = glm::mat4(1.0f);
 	projection = glm::mat4(1.0f);
-	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	projection = glm::perspective(FOV, WindowParas::getInstance().defaultAlpha, 0.1f, 100.0f);
-	backgroundShader.setMat4("model", model);
 	backgroundShader.setMat4("projection", projection);
-	cubeShader.setMat4("model", model);
 	cubeShader.setMat4("projection", projection);
-	edgeShader.setMat4("model", model);
 	edgeShader.setMat4("projection", projection);
 	backgroundShader.use();
 	glUniform1i(glGetUniformLocation(backgroundShader.ID, "ourTexture"), 0);
@@ -111,6 +106,7 @@ void SchoolMap::adaptation(float a) {
 	projection = glm::perspective(FOV, a, 0.1f, 100.0f);
 	backgroundShader.setMat4("projection", projection);
 	cubeShader.setMat4("projection", projection);
+	edgeShader.setMat4("projection", projection);
 }
 
 void SchoolMap::loadBuildingData(std::string fileName) {
@@ -201,9 +197,8 @@ void MyGUI::Render(int width, int height) {
 	ImGui::SetNextWindowPos(ImVec2(WindowParas::getInstance().SCREEN_WIDTH - width, 0));
 	ImGui::SetNextWindowSize(ImVec2(width, height));
 	ImGui::Begin("Drag Button");
-	if (ImGui::Button(camera.getRotation() ? "Disable Rotation" : "Enable Rotation")) {
-		camera.changeRotation();
-		if (!camera.getRotation()) camera.init();
+	if (ImGui::Button(camera.getMoving() ? "Rotation Mode" : "Moving Mode")) {
+		camera.changeMoving();
 	}
 	ImGui::Text("A Text String");
 

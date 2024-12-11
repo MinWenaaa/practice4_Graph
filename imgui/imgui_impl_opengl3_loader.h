@@ -264,7 +264,7 @@ typedef void (APIENTRYP PFNGLBINDBUFFERPROC) (GLenum target, GLuint buffer);
 typedef void (APIENTRYP PFNGLDELETEBUFFERSPROC) (GLsizei n, const GLuint *buffers);
 typedef void (APIENTRYP PFNGLGENBUFFERSPROC) (GLsizei n, GLuint *buffers);
 typedef void (APIENTRYP PFNGLBUFFERDATAPROC) (GLenum target, GLsizeiptr size, const void *data, GLenum usage);
-typedef void (APIENTRYP PFNGLBUFFERSUBDATAPROC) (GLenum target, GLintptr offset, GLsizeiptr size, const void *data);
+typedef void (APIENTRYP PFNGLBUFFERSUBDATAPROC) (GLenum target, GLintptr cameraTarget, GLsizeiptr size, const void *data);
 #ifdef GL_GLEXT_PROTOTYPES
 GLAPI void APIENTRY glBindBuffer (GLenum target, GLuint buffer);
 GLAPI void APIENTRY glDeleteBuffers (GLsizei n, const GLuint *buffers);

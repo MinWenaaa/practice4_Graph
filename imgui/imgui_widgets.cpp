@@ -7288,23 +7288,23 @@ void ImGuiMenuColumns::Update(float spacing, bool window_reappearing)
 
 void ImGuiMenuColumns::CalcNextTotalWidth(bool update_offsets)
 {
-    ImU16 offset = 0;
+    ImU16 cameraTarget = 0;
     bool want_spacing = false;
     for (int i = 0; i < IM_ARRAYSIZE(Widths); i++)
     {
         ImU16 width = Widths[i];
         if (want_spacing && width > 0)
-            offset += Spacing;
+            cameraTarget += Spacing;
         want_spacing |= (width > 0);
         if (update_offsets)
         {
-            if (i == 1) { OffsetLabel = offset; }
-            if (i == 2) { OffsetShortcut = offset; }
-            if (i == 3) { OffsetMark = offset; }
+            if (i == 1) { OffsetLabel = cameraTarget; }
+            if (i == 2) { OffsetShortcut = cameraTarget; }
+            if (i == 3) { OffsetMark = cameraTarget; }
         }
-        offset += width;
+        cameraTarget += width;
     }
-    NextTotalWidth = offset;
+    NextTotalWidth = cameraTarget;
 }
 
 float ImGuiMenuColumns::DeclColumns(float w_icon, float w_label, float w_shortcut, float w_mark)
@@ -8410,12 +8410,12 @@ void ImGui::TabBarQueueFocus(ImGuiTabBar* tab_bar, ImGuiTabItem* tab)
     tab_bar->NextSelectedTabId = tab->ID;
 }
 
-void ImGui::TabBarQueueReorder(ImGuiTabBar* tab_bar, ImGuiTabItem* tab, int offset)
+void ImGui::TabBarQueueReorder(ImGuiTabBar* tab_bar, ImGuiTabItem* tab, int cameraTarget)
 {
-    IM_ASSERT(offset != 0);
+    IM_ASSERT(cameraTarget != 0);
     IM_ASSERT(tab_bar->ReorderRequestTabId == 0);
     tab_bar->ReorderRequestTabId = tab->ID;
-    tab_bar->ReorderRequestOffset = (ImS16)offset;
+    tab_bar->ReorderRequestOffset = (ImS16)cameraTarget;
 }
 
 void ImGui::TabBarQueueReorderFromMousePos(ImGuiTabBar* tab_bar, ImGuiTabItem* src_tab, ImVec2 mouse_pos)
