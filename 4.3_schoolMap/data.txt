@@ -1,54 +1,54 @@
 BEGIN::POI_DATA
 Zhuo Cheng Building (Teaching Service Center)
--0.259477 0.618909
+-0.245708 0.608479
 National Key Laboratory of Geological Processes and Mineral Resources
--0.210281 0.335599
+-0.215031 0.327322
 National Key Laboratory of Biogeology and Environmental Geology
--0.209003 0.0876075
+-0.215738 0.0800434
 School of Materials and Chemistry
--0.470191 0.353518
+-0.462891 0.34371
 School of Environment
--0.548559 0.0560953
+-0.548022 0.0500749
 School of Computer Science
-0.118163 0.614903
+0.115627 0.609452
 School of Geography and Information Engineering (GIS Center)
-0.348771 0.614903
+0.336495 0.611635
 School of Economics and Management (Under Construction)
--0.857147 0.382263
+-0.843657 0.374837
 Zhuo Zhi Building (General Teaching Building 1)
-0.0855629 0.0895793
+0.0904112 0.0943882
 Zhuo Xing Building (General Teaching Building 2)
-0.0893218 0.325232
+0.0927125 0.331091
 Zhuo Yue Library (Under Construction)
--0.0753811 -0.285076
+-0.0719811 -0.282026
 Zhuo Ran Building (Student Activity Center)
-0.400516 -0.176553
+0.400773 -0.172667
 Future Stadium (Under Construction) бя Outdoor Sports Field
-0.749192 0.48385
+0.730324 0.482052
 Future Gymnasium (Under Construction)
-0.689904 0.12006
+0.689692 0.120317
 Zhuo Yuan Building (Faculty Activity Center, Faculty Canteen)
-0.642434 -0.155762
+0.635067 -0.153406
 Wen Bo Garden (Postdoctoral Accommodation)
-0.805209 -0.137944
+0.798273 -0.143445
 Wen Bo Garden (Group 5 Graduate Student Accommodation)
-0.811846 -0.285254
+0.801214 -0.286374
 Wen Bo Garden (Group 5 Graduate Student Accommodation)
-0.82918 -0.418989
+0.797036 -0.419131
 Wen Xin Garden (Group 3 Graduate Student Accommodation)
-0.63374 -0.412259
+0.615207 -0.414476
 Wen Shu Garden (Group 2 Undergraduate Female Accommodation)
-0.209442 -0.625298
+0.19317 -0.619672
 Wen Zhong Garden (Group 1 Undergraduate Male Accommodation)
--0.403061 -0.556802
+-0.382078 -0.549124
 Wen Cheng Garden (Group 4 International Student Accommodation)
--0.867647 -0.318803
+-0.851878 -0.322266
 Jin Ding Garden (Student Canteen 1)
--0.0628831 -0.668273
+-0.0729593 -0.674822
 Yu Cui Garden (Student Canteen 2, Ethnic Cuisine Restaurant)
--0.731352 -0.40685
+-0.709748 -0.401594
 School Hospital (Under Construction) бя Temporary Medical Point
--0.843572 0.12006
+-0.847556 0.122272
 Energy Center, Property Center
--0.950028 0.6389
+-0.91331 0.633891
 END::POI_DATA

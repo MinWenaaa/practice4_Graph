@@ -80,33 +80,26 @@ public:
 	void changeMoving() { mapMoving = !mapMoving; }
 	bool getMoving() { return mapMoving; }
 
-	void init() {
-		elevationAngle = PI/2; azimuthAngle = 0.f;
-		upDatePos(); upDataView();
-	}
-
-	void changeZoom(float zoom) { distance -= zoom; if (distance < 0.5f) distance = 0.5f; upDatePos(); upDataView(); }
+	void changeZoom(float zoom) { distance -= zoom; if (distance < 0.5f) distance = 0.5f; upDataView(); }
 	void chopdeltaX(float delta) { 
 		if (!mapMoving) {
 			azimuthAngle += delta;
-			upDatePos();
 		}
 		else {
-			offset.x += delta;
-			cameraTarget.x += delta;
+			offset.x += delta/2;
+			cameraTarget.x += delta/2;
 		}
 		upDataView();
 	}
 	void changeElevation(float delta) {	
 		if (mapMoving){
-			offset.y += delta;
-			cameraTarget.y += delta;
+			offset.y += delta/2;
+			cameraTarget.y += delta/2;
 		}
 		else {
 			elevationAngle += delta;
 			if (elevationAngle > (PI / 2)) elevationAngle = PI / 2;
 			if (elevationAngle < 0.4f) elevationAngle = 0.4f; 
-			upDatePos();
 		}
 		upDataView();
 	}
@@ -115,17 +108,13 @@ public:
 
 
 private:
-	Camera(): distance(2.f), elevationAngle(0.6f), azimuthAngle(0.f), cameraTarget(glm::vec3(0.f,0.f,0.f)) {
-		upDatePos();
-	}
-
-	void upDatePos() {
-		GLfloat plant = distance * cos(elevationAngle);
-		cameraPos = glm::vec3(plant*sin(azimuthAngle), -plant * cos(azimuthAngle), distance * sin(elevationAngle)) + offset;
-		//view = glm::lookAt(cameraPos, glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 0.0f, 1.0f));
+	Camera(): distance(1.5f), elevationAngle(0.7f), azimuthAngle(-0.3f), cameraTarget(glm::vec3(0.f,0.f,0.f)) {
+		upDataView();
 	}
 
 	void upDataView() {
+		GLfloat plant = distance * cos(elevationAngle);
+		cameraPos = glm::vec3(plant * sin(azimuthAngle), -plant * cos(azimuthAngle), distance * sin(elevationAngle)) + offset;
 		view = glm::lookAt(cameraPos, cameraTarget, glm::vec3(0.0f, 0.0f, 1.0f));
 	}
 

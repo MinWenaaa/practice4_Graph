@@ -125,7 +125,7 @@ painter::Edge::Edge(GLfloat* positions, GLint color, int v1, int v2, int start, 
     for (int i = 0; i < stride_line; i++) {
         colors[i] = color;
     }
-    std::cout << "Edge Init:" << glGetError() << std::endl;
+    //std::cout << "Edge Init:" << glGetError() << std::endl;
     glGenVertexArrays(1, &VAO);
     glGenVertexArrays(1, &VAO_cover);
     glGenBuffers(1, &VBO_position);
@@ -138,7 +138,7 @@ painter::Edge::Edge(GLfloat* positions, GLint color, int v1, int v2, int start, 
     glVertexAttribIPointer(1, 1, GL_INT, sizeof(GLuint), (void*)0);
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    std::cout << "Edge Init End: " << glGetError() << std::endl;
+    //std::cout << "Edge Init End: " << glGetError() << std::endl;
 }
 
 void painter::Edge::setCoverColor(GLuint c) {

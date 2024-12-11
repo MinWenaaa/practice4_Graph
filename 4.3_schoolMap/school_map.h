@@ -45,6 +45,10 @@ public:
 	void ProcessInput(GLfloat x, GLfloat y);
 	void Render();
 	void adaptation(float a);
+	std::string getCurrentName() {
+		if (currentBuilding == -1) return " ";
+		return buildings[currentBuilding].name;
+	}
 
 	glm::mat4 projection;
 
@@ -69,7 +73,7 @@ private:
 
 	Minw::undirectedGraph<int, float> schoolRoad;
 
-	float lastX= 0, lastY = 0;
+	int currentBuilding, start, target;
 };
 
 class MyGUI {

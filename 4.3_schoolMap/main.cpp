@@ -80,7 +80,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 		isDragging = false;
 		if ((glfwGetTime() - press_time) < 0.15 /*&& !Camera::getInstance().getRotation()*/) {	// 释放时间小于间隔，判定为点击操作
-			std::cout << "click at:" << x << " " << y << std::endl;
+			//std::cout << "click at:" << x << " " << y << std::endl;
 			GLfloat depth;
 			glReadPixels(x, WindowParas::getInstance().SCREEN_HEIGHT-y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
 			glm::vec4 worldSpacePos;
@@ -92,7 +92,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 			viewSpacePos /= viewSpacePos.w; 
 			worldSpacePos = inverseView * viewSpacePos;
 			worldSpacePos /= worldSpacePos.w; 
-			std::cout << "newVec: " << worldSpacePos.x << " " << worldSpacePos.y << " " << worldSpacePos.z << std::endl;
+			SchoolMap::getInstance().ProcessInput(worldSpacePos.x, worldSpacePos.y);
 		}
 	}
 }

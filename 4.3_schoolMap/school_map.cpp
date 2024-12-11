@@ -19,7 +19,7 @@ namespace school_map {
 	}
 }
 
-SchoolMap::SchoolMap() : width(0), height(0), nrChannels(0), schoolRoad(100), numNode(0), numEdge(0),
+SchoolMap::SchoolMap() : width(0), height(0), nrChannels(0), schoolRoad(100), numNode(0), numEdge(0), currentBuilding(-1), start(-1), target(-1),
 	nodeShader(Shader("../mylib/node_static.vs", "../mylib/node_static.fs")), edgeShader(Shader("../mylib/road.vs", "../mylib/edge_basic.fs")),
 	backgroundShader(Shader("../mylib/background.vs", "../mylib/background.fs")), cubeShader(Shader("../mylib/cube.vs", "../mylib/cube.fs")) {
 
@@ -73,15 +73,17 @@ SchoolMap::SchoolMap() : width(0), height(0), nrChannels(0), schoolRoad(100), nu
 
 	loadBuildingData("data.txt");
 	loadGraphData("roadData.txt");
-	buildings.push_back(Building(0, 0, &cubeShader, "??"));
 }
 
 void SchoolMap::ProcessInput(GLfloat x, GLfloat y) {
-	float realX, realY;
-	Camera::getInstance().get2Dxy(x*WindowParas::getInstance().defaultAlpha, y, realX, realY);
-	std::cout << realX << " " << realY << std::endl;
-	std::cout << "distance: " << sqrt(pow((realX - lastX), 2) + pow((realY - lastY), 2)) << std::endl;
-	lastX = realX; lastY = realY;
+	std::cout << x << " " << y << std::endl;
+	for (int i = 0; i < buildings.size(); i++) {
+		if (buildings[i].getDistance(x, y) < cubeSize) {
+			buildings[i].changeSelected();
+			currentBuilding = i;
+			break;
+		}
+	}
 }
 
 void SchoolMap::Render() {
@@ -181,7 +183,7 @@ void MyGUI::init(GLFWwindow* window) {
 	ImGui::StyleColorsClassic();
 
 	ImFont* font = io.Fonts->AddFontFromFileTTF(
-		"../imgui/Arial.ttf", 46, nullptr, io.Fonts->GetGlyphRangesChineseSimplifiedCommon()
+		"../imgui/Arial.ttf", 36, nullptr, io.Fonts->GetGlyphRangesChineseSimplifiedCommon()
 	);
 	IM_ASSERT(font != nullptr);
 	io.Fonts->Build();
@@ -196,25 +198,28 @@ void MyGUI::Render(int width, int height) {
 	Camera& camera = Camera::getInstance();
 	ImGui::SetNextWindowPos(ImVec2(WindowParas::getInstance().SCREEN_WIDTH - width, 0));
 	ImGui::SetNextWindowSize(ImVec2(width, height));
-	ImGui::Begin("Drag Button");
+	ImGui::Begin("Fold");
+
+	ImGui::Dummy(ImVec2(10, 20));
+	ImGui::TextWrapped(SchoolMap::getInstance().getCurrentName().c_str());
+	ImGui::Dummy(ImVec2(10, 20));
+	ImGui::Separator();
 	if (ImGui::Button(camera.getMoving() ? "Rotation Mode" : "Moving Mode")) {
 		camera.changeMoving();
 	}
-	ImGui::Text("A Text String");
+	//char buffer[256] = "";
+	//ImGui::InputText("Input Field", buffer, sizeof(buffer));
+	//std::string textU8 = buffer;
 
-	char buffer[256] = "";
-	ImGui::InputText("Input Field", buffer, sizeof(buffer));
-	std::string textU8 = buffer;
-
-	ImGui::Checkbox("Show Drag", &isShowDrag);
-	if (isShowDrag)
-	{
-		float value = 10.0f;
-		ImGui::DragFloat(u8"Value", &value);
-	}
-	ImGui::SliderFloat("float", &fValue, 0.0f, 1.0f);
-	ImGui::SameLine();
-	ImGui::Text("Value %f", fValue);
+	//ImGui::Checkbox("Show Drag", &isShowDrag);
+	//if (isShowDrag)
+	//{
+	//	float value = 10.0f;
+	//	ImGui::DragFloat(u8"Value", &value);
+	//}
+	//ImGui::SliderFloat("float", &fValue, 0.0f, 1.0f);
+	//ImGui::SameLine();
+	//ImGui::Text("Value %f", fValue);
 	ImGui::End();
 
 	ImGui::Render();
