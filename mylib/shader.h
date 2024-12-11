@@ -81,7 +81,7 @@ public:
 	bool getRotation() { return rotation; }
 
 	void init() {
-		elevationAngle = 0.6f; azimuthAngle = 0.f;
+		elevationAngle = PI/2; azimuthAngle = 0.f;
 		upDatePos();
 	}
 
@@ -102,7 +102,7 @@ public:
 
 
 private:
-	Camera(): distance(2.f), elevationAngle(0.6f), azimuthAngle(0.f), cameraTarget(glm::vec3(0.f,0.f,0.f)) {
+	Camera(): distance(2.f), elevationAngle(0.6f), azimuthAngle(0.2f), cameraTarget(glm::vec3(0.f,0.f,0.f)) {
 		upDatePos();
 	}
 

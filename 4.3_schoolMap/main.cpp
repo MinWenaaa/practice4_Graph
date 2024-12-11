@@ -33,8 +33,10 @@ int main() {
 
 	MyGUI::getInstance().init(window);
 	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 
 	while (!glfwWindowShouldClose(window)) {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		processInput(window);
 
 		glClearColor(1.f, 1.f, 1.f, 1.0f);
@@ -77,8 +79,23 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 		isDragging = false;
-		if ((glfwGetTime() - press_time) < 0.15 && !Camera::getInstance().getRotation()) {	// 释放时间小于间隔，判定为点击操作
-			SchoolMap::getInstance().ProcessInput(lastX, lastY);
+		if ((glfwGetTime() - press_time) < 0.15 /*&& !Camera::getInstance().getRotation()*/) {	// 释放时间小于间隔，判定为点击操作
+			std::cout << "click at:" << x << ", " << y << std::endl;
+			GLfloat depth;
+			glReadPixels(x, WindowParas::getInstance().SCREEN_HEIGHT-y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+			glm::mat4 coff = glm::inverse(SchoolMap::getInstance().projection * Camera::getInstance().getView() * SchoolMap::getInstance().model);
+			glm::vec4 origin = glm::vec4(lastX, lastY, 2.f*depth-1.f, 1.f);
+			glm::mat4 inverseMat = glm::inverse(coff);
+			glm::vec4 worldPos = inverseMat * origin;
+			glm::vec3 newVec = glm::vec3(worldPos.x, worldPos.y, worldPos.z) / worldPos.w;
+			//glm::mat4 inverseProjection = glm::inverse(SchoolMap::getInstance().projection);
+			//glm::mat4 inverseView = glm::inverse(Camera::getInstance().getView());
+			//glm::vec4 viewSpacePos = inverseProjection * origin;
+			//viewSpacePos /= viewSpacePos.w; 
+			//newVec = inverseView * viewSpacePos;
+			//newVec /= newVec.w; // 如果不是正交投影，则需要再次透视除法
+			std::cout << "newVec: " << newVec.x << ", " << newVec.y << ", " << newVec.z << std::endl;
+			SchoolMap::getInstance().ProcessInput(newVec.x, newVec.y);
 		}
 	}
 }

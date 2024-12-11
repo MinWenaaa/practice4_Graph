@@ -20,7 +20,7 @@ namespace school_map {
 }
 
 SchoolMap::SchoolMap() : width(0), height(0), nrChannels(0), schoolRoad(100), numNode(0), numEdge(0),
-	nodeShader(Shader("../mylib/node_static.vs", "../mylib/node_static.fs")), edgeShader(Shader("../mylib/edge_basic.vs", "../mylib/edge_basic.fs")),
+	nodeShader(Shader("../mylib/node_static.vs", "../mylib/node_static.fs")), edgeShader(Shader("../mylib/road.vs", "../mylib/edge_basic.fs")),
 	backgroundShader(Shader("../mylib/background.vs", "../mylib/background.fs")), cubeShader(Shader("../mylib/cube.vs", "../mylib/cube.fs")) {
 
 	glGenTextures(1, &base_map);
@@ -71,10 +71,13 @@ SchoolMap::SchoolMap() : width(0), height(0), nrChannels(0), schoolRoad(100), nu
 	backgroundShader.setMat4("projection", projection);
 	cubeShader.setMat4("model", model);
 	cubeShader.setMat4("projection", projection);
+	edgeShader.setMat4("model", model);
+	edgeShader.setMat4("projection", projection);
 	backgroundShader.use();
 	glUniform1i(glGetUniformLocation(backgroundShader.ID, "ourTexture"), 0);
 
 	loadBuildingData("data.txt");
+	loadGraphData("roadData.txt");
 	buildings.push_back(Building(0, 0, &cubeShader, "??"));
 }
 
@@ -82,13 +85,14 @@ void SchoolMap::ProcessInput(GLfloat x, GLfloat y) {
 	float realX, realY;
 	Camera::getInstance().get2Dxy(x*WindowParas::getInstance().defaultAlpha, y, realX, realY);
 	std::cout << realX << " " << realY << std::endl;
-	std::cout << "distance: " << sqrt(pow((realX - lastX), 2) + pow((realY - lastY), 2));
+	std::cout << "distance: " << sqrt(pow((realX - lastX), 2) + pow((realY - lastY), 2)) << std::endl;
 	lastX = realX; lastY = realY;
 }
 
 void SchoolMap::Render() {
 	backgroundShader.setMat4("view", Camera::getInstance().getView());
 	cubeShader.setMat4("view", Camera::getInstance().getView());
+	edgeShader.setMat4("view", Camera::getInstance().getView());
 	backgroundShader.use();
 	glBindTexture(GL_TEXTURE_2D, base_map);
 	glBindVertexArray(VAO);
@@ -96,6 +100,10 @@ void SchoolMap::Render() {
 	cubeShader.use();
 	for (int i = 0; i < buildings.size();i++) {
 		buildings[i].draw();
+	}
+	edgeShader.use();
+	for (int i = 0; i < roads.size(); i++) {
+		roads[i].draw_baseLayer();
 	}
 }
 
@@ -140,7 +148,7 @@ void SchoolMap::addEdge(int v1, int v2) {
 	if (v1 < 0 || v1 >= numNode || v2 < 0 || v2 >= numNode) return;
 	float positions[] = { nodes[v1].x, nodes[v1].y, nodes[v2].x, nodes[v2].y };
 	roads.push_back(painter::Edge(positions, 0, v1, v2, v1, &edgeShader));
-	schoolRoad.insertEdge(v1, v2, sqrt(pow(nodes[v1].x - nodes[v2].x, 2) + pow(nodes[v1].y - nodes[v2].y, 2));
+	schoolRoad.insertEdge(v1, v2, sqrt(pow(nodes[v1].x - nodes[v2].x, 2) + pow(nodes[v1].y - nodes[v2].y, 2)));
 }
 //------------------------------------------------------------------------
 void SchoolMap::loadGraphData(std::string fileName) {
@@ -161,8 +169,8 @@ void SchoolMap::loadGraphData(std::string fileName) {
 		std::getline(inFile, line);
 	}
 	int v1, v2;
-	while (line != "END::EDGEDATA") {
-		std::getline(inFile, line);
+	while (std::getline(inFile, line)) {
+		if (line == "END::EDGEDATA") break;
 		std::istringstream iss(line);
 		iss >> v1 >> v2;
 		addEdge(v1, v2);

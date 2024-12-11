@@ -46,6 +46,8 @@ public:
 	void Render();
 	void adaptation(float a);
 
+	glm::mat4 model, projection;
+
 private:
 	SchoolMap();
 
@@ -59,7 +61,6 @@ private:
 	int width, height, nrChannels;		// 底图影像的长宽高
 
 	Shader nodeShader, edgeShader, backgroundShader, cubeShader;
-	glm::mat4 model, projection;
 
 	std::vector<Building> buildings;
 	std::vector<school_map::Node> nodes;
