@@ -53,6 +53,7 @@ namespace painter {
 		}
 		void draw_baseLayer();
 		void draw_coverLayer(float &p);
+		void setColor2(bool color);
 		void setCoverColor(GLuint color);
 
 		int v1, v2;

@@ -45,6 +45,7 @@ namespace Minw {
 
 		bool DFS(int v);
 		bool BFS(int v);
+		E Dijkstra(int v1, int v2, int*& lastPoint);
 
 		int getDepthN(int v);
 		int getDepthE(int v1, int v2);
@@ -291,4 +292,56 @@ void Minw::undirectedGraph<T, E>::output2File(std::string fileName) {
 		outFile << "END::EDGEDATA";
 		delete[] isWritten;
 	}
+}
+//------------------------------------------------------------------------
+template<class T, class E>
+E Minw::undirectedGraph<T, E>::Dijkstra(int v1, int v2, int*& resultRoad) {
+	if (v1<0 || v1>numVertices || v2<0 || v2>numVertices) return -1;
+	std::cout << "point num:" << numVertices << std::endl;
+	for (int i = 0; i < numVertices; i++) {
+		if (!nodeTable[i].adj) std::cout << "exist invalid node: " << i << std::endl;
+	}
+	int* lastPoint = new int[numVertices];
+	E* costSum = new E[numVertices];
+	bool* visited = new bool[numVertices];
+	resultRoad = new int[numVertices];
+	for (int i = 0; i < numVertices; ++i) {
+		lastPoint[i] = -1; costSum[i] = 0; visited[i] = false; resultRoad[i] = -1;
+	}
+	visited[v1] = true;
+	bool flag = true;
+	while (flag) {
+		E minCost = 10; int minNode = v1;
+		for (int i = 0; i < numVertices; i++) {
+			if (lastPoint[i] != -1 && costSum[i] < minCost && !visited[i]) {
+				minCost = costSum[i]; minNode = i;
+			}
+		}
+		visited[minNode] = true;
+		Edge<T,E>* p = nodeTable[minNode].adj;
+		flag = false;
+		while (p) {
+			if ((lastPoint[p->dest] != -1 && costSum[p->dest] > costSum[minNode] + p->cost) || (lastPoint[p->dest] == -1 && p->dest != v1)) {
+				lastPoint[p->dest] = minNode;
+				costSum[p->dest] = costSum[minNode] + p->cost;
+				visited[p->dest] = false;
+			}
+			p = p->link;
+		}
+		for (int i = 0; i < numVertices; i++) {
+			if (lastPoint[i] == -1 && i!=v1) {
+				flag = true; /*std::cout << "first seperated point: " << i << std::endl;*/ break;
+			}
+		}
+	}
+	int cur = v2;
+	while (cur != v1) {
+		resultRoad[cur] = lastPoint[cur];
+		cur = lastPoint[cur];
+	}
+	float result = costSum[v2];
+	delete[] lastPoint;
+	delete[] costSum;
+	delete[] visited;
+	return result;
 }

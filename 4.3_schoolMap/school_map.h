@@ -46,9 +46,16 @@ public:
 	void Render();
 	void adaptation(float a);
 	std::string getCurrentName() {
-		if (currentBuilding == -1) return " ";
+		if (currentBuilding == -1) return "no point selected";
 		return buildings[currentBuilding].name;
 	}
+	void setStart() { 
+		if(start>-1&&start<buildings.size()) buildings[start].changeSelected(false);
+		start = currentBuilding; }
+	void setEnd() { 
+		if (target>-1 && target < buildings.size())buildings[target].changeSelected(false);
+		target = currentBuilding; }
+	void navigation();
 
 	glm::mat4 projection;
 
@@ -74,6 +81,7 @@ private:
 	Minw::undirectedGraph<int, float> schoolRoad;
 
 	int currentBuilding, start, target;
+	float currentDistance;
 };
 
 class MyGUI {

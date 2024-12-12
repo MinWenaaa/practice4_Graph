@@ -1,6 +1,7 @@
 #include"geo_features.h"
 
-Building::Building(GLfloat x, GLfloat y, Shader* shader, std::string name): x(x), y(y), isSelected(false), shader(shader), name(name) {
+Building::Building(GLfloat x, GLfloat y, int node, Shader* shader, std::string name): 
+    x(x), y(y), isSelected(false), node(node), shader(shader), name(name) {
     float vertices[] = {
            x-cubeSize/2, y- cubeSize / 2, 0.f,
             x+cubeSize / 2, y- cubeSize / 2, 0.f,
@@ -42,8 +43,8 @@ Building::Building(GLfloat x, GLfloat y, Shader* shader, std::string name): x(x)
     glBindVertexArray(0);
 }
 
-void Building::changeSelected() {
-    isSelected = !isSelected;
+void Building::changeSelected(bool b) {
+    isSelected = b;
     int color[8];
     std::fill(color, color + 8, isSelected);
     glBindVertexArray(VAO);

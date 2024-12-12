@@ -8,7 +8,7 @@ void main()
 		FragColor = vec4(0.73, 0.78, 0.84, 1.0);
 		break;
 	case 1:
-		FragColor = vec4(0.25, 0.47, 0.77, 1.0);
+		FragColor = vec4(0.16, 0.54, 0.87, 1.0);
 		break;
 	case 2:
 		FragColor = vec4(0.7, 0.7, 0.9, 1.0);

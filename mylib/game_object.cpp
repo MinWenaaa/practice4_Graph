@@ -232,3 +232,16 @@ void painter::Edge::setColor() {
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
+
+void painter::Edge::setColor2(bool color) {
+    GLuint colors[stride_line];
+    for (int i = 0; i < stride_line; i++) {
+        colors[i] = color;
+    }
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_color);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * stride_line, colors, GL_STATIC_DRAW);
+    glVertexAttribIPointer(1, 1, GL_INT, sizeof(GLuint), (void*)0);
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
